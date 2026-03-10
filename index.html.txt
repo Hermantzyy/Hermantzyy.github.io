@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jual Beli Akun Game</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <header>
+        <h1>Jual Beli Akun Game</h1>
+        <nav>
+            <ul>
+                <li><a href="#home">Beranda</a></li>
+                <li><a href="#listings">Daftar Akun</a></li>
+                <li><a href="#tambah">Tambah Akun</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="home">
+        <h2>Selamat Datang di Platform Jual Beli Akun Game</h2>
+        <p>Temukan dan jual akun game favoritmu dengan mudah dan aman.</p>
+    </section>
+
+    <section id="listings">
+        <h2>Daftar Akun</h2>
+        <div id="akun-list" class="grid-container">
+            <!-- Daftar akun akan dimuat di sini -->
+        </div>
+    </section>
+
+    <section id="tambah">
+        <h2>Tambah Akun Baru</h2>
+        <form id="form-tambah" class="form-container">
+            <label for="game">Game:</label>
+            <input type="text" id="game" required />
+
+            <label for="username">Username Akun:</label>
+            <input type="text" id="username" required />
+
+            <label for="harga">Harga:</label>
+            <input type="number" id="harga" required />
+
+            <button type="submit">Tambah Akun</button>
+        </form>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Jual Beli Akun Game</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
