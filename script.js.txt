@@ -1,0 +1,41 @@
+const akunListDiv = document.getElementById('akun-list');
+const formTambah = document.getElementById('form-tambah');
+
+let daftarAkun = [];
+
+// Fungsi untuk menampilkan daftar akun
+function tampilkanAkun() {
+    akunListDiv.innerHTML = '';
+    daftarAkun.forEach((akun, index) => {
+        const divAkun = document.createElement('div');
+        divAkun.className = 'akun';
+        divAkun.innerHTML = `
+            <h3>${akun.game}</h3>
+            <p><strong>Username:</strong> ${akun.username}</p>
+            <p><strong>Harga:</strong> Rp ${akun.harga}</p>
+            <button onclick="hapusAkun(${index})">Hapus</button>
+        `;
+        akunListDiv.appendChild(divAkun);
+    });
+}
+
+// Fungsi untuk hapus akun
+function hapusAkun(index) {
+    daftarAkun.splice(index, 1);
+    tampilkanAkun();
+}
+
+// Event listener saat form disubmit
+formTambah.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const game = document.getElementById('game').value;
+    const username = document.getElementById('username').value;
+    const harga = document.getElementById('harga').value;
+
+    daftarAkun.push({ game, username, harga });
+    formTambah.reset();
+    tampilkanAkun();
+});
+
+// Tampilkan daftar akun awal (jika ada data)
+tampilkanAkun();
