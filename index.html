@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FishingHub - Platform Memancing Interaktif</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+    <!-- Floating Particles Background -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Navbar with Advanced Features -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-fish"></i> 
+                <span>FishingHub</span>
+                <span class="badge">v2.0</span>
+            </div>
+            
+            <div class="nav-center">
+                <ul class="nav-links">
+                    <li><a href="#home">Beranda</a></li>
+                    <li><a href="#game">Game</a></li>
+                    <li><a href="#tips">Tips</a></li>
+                    <li><a href="#calculator">Kalkulator</a></li>
+                    <li><a href="#galeri">Galeri</a></li>
+                    <li><a href="#kontak">Kontak</a></li>
+                </ul>
+            </div>
+
+            <div class="nav-right">
+                <button class="btn-theme" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section with Animated Background -->
+    <section id="home" class="hero">
+        <canvas id="waterCanvas"></canvas>
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <span class="word">Selamat</span>
+                <span class="word">Datang</span>
+                <span class="word">di</span>
+                <span class="word">FishingHub</span>
+            </h1>
+            <p class="hero-subtitle">Platform Memancing Terlengkap & Paling Interaktif</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" data-scroll="game">
+                    <i class="fas fa-gamepad"></i> Mainkan Game
+                </button>
+                <button class="btn btn-secondary" data-scroll="tips">
+                    <i class="fas fa-book"></i> Pelajari Tips
+                </button>
+            </div>
+            <div class="scroll-indicator">
+                <span>Scroll untuk lanjut</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Fishing Game Section -->
+    <section id="game" class="game-section">
+        <div class="container">
+            <h2 class="section-title">
+                <i class="fas fa-gamepad"></i> Game Memancing Interaktif
+            </h2>
+            
+            <div class="game-wrapper">
+                <div class="game-container">
+                    <canvas id="gameCanvas"></canvas>
+                    <div class="game-ui">
+                        <div class="game-info">
+                            <div class="score-board">
+                                <div class="stat">
+                                    <span class="label">Tangkapan:</span>
+                                    <span class="value" id="catchCount">0</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="label">Skor:</span>
+                                    <span class="value" id="gameScore">0</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="label">Waktu:</span>
+                                    <span class="value" id="gameTime">60</span>s
+                                </div>
+                            </div>
+                        </div>
+                        <div class="power-bar">
+                            <div class="power-fill" id="powerFill"></div>
+                            <span class="power-label">Kekuatan Lemparan</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="game-controls">
+                    <h3>Cara Bermain</h3>
+                    <ul class="controls-list">
+                        <li><strong>KLIK & TAHAN</strong> - Naikkan power</li>
+                        <li><strong>LEPAS</strong> - Lempar pancing</li>
+                        <li><strong>GESER MOUSE</strong> - Arahkan hook</li>
+                        <li><strong>CLICK IKAN</strong> - Tangkap ikan</li>
+                    </ul>
+                    <div class="game-buttons">
+                        <button class="btn btn-primary" id="startGameBtn">
+                            <i class="fas fa-play"></i> Mulai Game
+                        </button>
+                        <button class="btn btn-danger" id="resetGameBtn">
+                            <i class="fas fa-redo"></i> Reset
+                        </button>
+                    </div>
+                    <div class="high-scores">
+                        <h4>🏆 Top Scores</h4>
+                        <ol id="scoresList">
+                            <li>Belum ada skor</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Advanced Tips Section -->
+    <section id="tips" class="tips-section">
+        <div class="container">
+            <h2 class="section-title">
+                <i class="fas fa-lightbulb"></i> Tips & Trik Profesional
+            </h2>
+
+            <div class="tips-filter">
+                <button class="filter-btn active" data-filter="all">Semua</button>
+                <button class="filter-btn" data-filter="beginner">Pemula</button>
+                <button class="filter-btn" data-filter="intermediate">Menengah</button>
+                <button class="filter-btn" data-filter="advanced">Expert</button>
+            </div>
+
+            <div class="tips-grid">
+                <!-- Tips Cards dengan Data -->
+                <div class="tip-card" data-category="beginner">
+                    <div class="tip-header">
+                        <i class="fas fa-sun"></i>
+                        <span class="level">Pemula</span>
+                    </div>
+                    <h3>Waktu Terbaik Memancing</h3>
+                    <p>Memancing paling produktif antara jam 4-7 pagi atau 4-7 sore. Hindari siang hari karena cahaya matahari membuat ikan menyelam lebih dalam.</p>
+                    <div class="tip-details">
+                        <div class="detail-item">
+                            <i class="fas fa-star"></i> Produktivitas: 95%
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-thermometer-half"></i> Suhu: 20-25°C
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-card" data-category="beginner">
+                    <div class="tip-header">
+                        <i class="fas fa-worm"></i>
+                        <span class="level">Pemula</span>
+                    </div>
+                    <h3>Memilih Umpan yang Tepat</h3>
+                    <p>Gunakan umpan hidup seperti cacing atau udang untuk hasil maksimal. Umpan segar lebih efektif. Sesuaikan ukuran umpan dengan target ikan.</p>
+                    <div class="tip-details">
+                        <div class="detail-item">
+                            <i class="fas fa-check"></i> Cacing tanah
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-check"></i> Udang kecil
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-card" data-category="intermediate">
+                    <div class="tip-header">
+                        <i class="fas fa-map-pin"></i>
+                        <span class="level">Menengah</span>
+                    </div>
+                    <h3>Teknik Casting Presisi</h3>
+                    <p>Kuasai berbagai teknik casting: overhead cast, sidearm cast, dan underhand cast. Latih akurasi untuk menargetkan area yang tepat di sekitar rerumputan.</p>
+                    <div class="tip-details">
+                        <div class="detail-item">
+                            <i class="fas fa-tachometer-alt"></i> Jangkauan: 30-50m
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-bullseye"></i> Akurasi: ±1m
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-card" data-category="intermediate">
+                    <div class="tip-header">
+                        <i class="fas fa-wind"></i>
+                        <span class="level">Menengah</span>
+                    </div>
+                    <h3>Membaca Kondisi Cuaca</h3>
+                    <p>Cuaca mendung atau sedikit hujan adalah kondisi ideal. Tekanan udara rendah membuat ikan lebih aktif. Hindari suara petir dan angin kencang yang berbahaya.</p>
+                    <div class="tip-details">
+                        <div class="detail-item">
+                            <i class="fas fa-cloud-rain"></i> Ideal saat mendung
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-wind"></i> Angin 5-15 km/h
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-card" data-category="advanced">
+                    <div class="tip-header">
+                        <i class="fas fa-brain"></i>
+                        <span class="level">Expert</span>
+                    </div>
+                    <h3>Strategi Advanced Fishing</h3>
+                    <p>Gunakan teknik catch and release untuk sustainable fishing. Pahami perilaku ikan berdasarkan musim dan fase bulan. Kombinasikan berbagai teknik untuk hasil maksimal.</p>
+                    <div class="tip-details">
+                        <div class="detail-item">
+                            <i class="fas fa-moon"></i> Bulan purnama: +40% hasil
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-recycle"></i> Catch & Release
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-card" data-category="advanced">
+                    <div class="tip-header">
+                        <i class="fas fa-microscope"></i>
+                        <span class="level">Expert</span>
+                    </div>
+                    <h3>Ekosistem & Migrasi Ikan</h3>
+                    <p>Pelajari pola migrasi ikan berdasarkan suhu air dan kedalaman. Gunakan fish finder untuk lokalisasi. Pahami struktur bawah air untuk pemilihan lokasi optimal.</p>
+                    <div class="tip-details">
+                        <div class="detail-item">
+                            <i class="fas fa-water"></i> Kedalaman: 2-5m
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-compass"></i> Navigasi GPS
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fishing Calculator Section -->
+    <section id="calculator" class="calculator-section">
+        <div class="container">
+            <h2 class="section-title">
+                <i class="fas fa-calculator"></i> Kalkulator Memancing
+            </h2>
+
+            <div class="calculator-grid">
+                <!-- Fish Weight Calculator -->
+                <div class="calculator-card">
+                    <h3>Estimasi Berat Ikan</h3>
+                    <p class="description">Hitung berat ikan dari panjang dan kedalaman</p>
+                    <div class="form-group">
+                        <label>Panjang Ikan (cm)</label>
+                        <input type="number" id="fishLength" placeholder="Masukkan panjang" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Tipe Ikan</label>
+                        <select id="fishType">
+                            <option value="lele">Lele</option>
+                            <option value="mas">Ikan Mas</option>
+                            <option value="nila">Nila</option>
+                            <option value="patin">Patin</option>
+                            <option value="gurame">Gurame</option>
+                            <option value="trout">Trout</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" id="calculateWeightBtn">Hitung Berat</button>
+                    <div class="result-box" id="weightResult"></div>
+                </div>
+
+                <!-- Rod Power Calculator -->
+                <div class="calculator-card">
+                    <h3>Pemilihan Joran yang Tepat</h3>
+                    <p class="description">Rekomendasi joran berdasarkan target ikan</p>
+                    <div class="form-group">
+                        <label>Target Berat Ikan (kg)</label>
+                        <input type="number" id="targetWeight" placeholder="Contoh: 5" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Tipe Air</label>
+                        <select id="waterType">
+                            <option value="tawar">Air Tawar</option>
+                            <option value="asin">Air Asin</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" id="calculateRodBtn">Rekomendasi</button>
+                    <div class="result-box" id="rodResult"></div>
+                </div>
+
+                <!-- Distance Calculator -->
+                <div class="calculator-card">
+                    <h3>Jangkauan Casting</h3>
+                    <p class="description">Estimasi jarak casting optimal</p>
+                    <div class="form-group">
+                        <label>Bobot Umpan (gram)</label>
+                        <input type="number" id="baitWeight" placeholder="Masukkan bobot" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Kekuatan Joran</label>
+                        <select id="rodPower">
+                            <option value="light">Ringan (5-10g)</option>
+                            <option value="medium">Sedang (10-20g)</option>
+                            <option value="heavy">Berat (20-40g)</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" id="calculateDistanceBtn">Hitung Jangkauan</button>
+                    <div class="result-box" id="distanceResult"></div>
+                </div>
+
+                <!-- Best Time Finder -->
+                <div class="calculator-card">
+                    <h3>Waktu Terbaik</h3>
+                    <p class="description">Temukan waktu optimal memancing</p>
+                    <div class="form-group">
+                        <label>Tanggal</label>
+                        <input type="date" id="fishingDate">
+                    </div>
+                    <div class="form-group">
+                        <label>Lokasi</label>
+                        <select id="location">
+                            <option value="jakarta">Jakarta</option>
+                            <option value="bandung">Bandung</option>
+                            <option value="surabaya">Surabaya</option>
+                            <option value="medan">Medan</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" id="calculateTimeBtn">Temukan Waktu</button>
+                    <div class="result-box" id="timeResult"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="galeri" class="gallery-section">
+        <div class="container">
+            <h2 class="section-title">
+                <i class="fas fa-images"></i> Galeri Hasil Tangkapan
+            </h2>
+
+            <div class="gallery-filter">
+                <button class="filter-btn active" data-filter="all">Semua</button>
+                <button class="filter-btn" data-filter="trophy">Trophy</button>
+                <button class="filter-btn" data-filter="species">Spesies</button>
+                <button class="filter-btn" data-filter="technique">Teknik</button>
+            </div>
+
+            <div class="gallery-grid" id="gallery">
+                <!-- Gallery items akan diisi dinamis -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="kontak" class="contact-section">
+        <div class="container">
+            <h2 class="section-title">
+                <i class="fas fa-envelope"></i> Hubungi Kami
+            </h2>
+
+            <div class="contact-content">
+                <div class="contact-form-wrapper">
+                    <form id="contactForm" class="contact-form">
+                        <div class="form-group">
+                            <label>Nama Lengkap</label>
+                            <input type="text" placeholder="Masukkan nama Anda" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" placeholder="Masukkan email Anda" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Subjek</label>
+                            <input type="text" placeholder="Masukkan subjek" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Pesan</label>
+                            <textarea placeholder="Tulis pesan Anda" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-send"></i> Kirim Pesan
+                        </button>
+                    </form>
+                </div>
+
+                <div class="contact-info-wrapper">
+                    <div class="info-card">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h4>Lokasi</h4>
+                        <p>Jakarta, Indonesia</p>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-phone"></i>
+                        <h4>Telepon</h4>
+                        <p>+62 812-3456-7890</p>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-envelope"></i>
+                        <h4>Email</h4>
+                        <p>info@fishinghub.com</p>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-clock"></i>
+                        <h4>Jam Operasional</h4>
+                        <p>Senin - Minggu: 08:00 - 17:00</p>
+                    </div>
+                    <div class="social-media">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>FishingHub</h4>
+                    <p>Platform memancing terlengkap dengan game interaktif, tips profesional, dan tools lengkap.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Links</h4>
+                    <ul>
+                        <li><a href="#home">Beranda</a></li>
+                        <li><a href="#game">Game</a></li>
+                        <li><a href="#tips">Tips</a></li>
+                        <li><a href="#calculator">Kalkulator</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Kategori</h4>
+                    <ul>
+                        <li><a href="#">Ikan Air Tawar</a></li>
+                        <li><a href="#">Ikan Air Asin</a></li>
+                        <li><a href="#">Peralatan</a></li>
+                        <li><a href="#">Lokasi</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 FishingHub. Semua hak dilindungi. | Dibuat dengan <i class="fas fa-heart"></i> untuk para pecinta memancing</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <script src="js/main.js"></script>
+    <script src="js/fishing-game.js"></script>
+    <script src="js/calculator.js"></script>
+    <script src="js/weather.js"></script>
+</body>
+</html>
