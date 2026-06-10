@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>HP Control Panel</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            background: #0a0f1e;
+            font-family: 'Segoe UI', system-ui, -apple-system, 'Roboto', sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #eef4ff;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 1.8rem;
+            text-align: center;
+            margin: 0 0 8px 0;
+            background: linear-gradient(135deg, #a5f3fc, #2dd4bf);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .sub {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #7c8ba0;
+            margin-bottom: 24px;
+            border-bottom: 1px solid #1e2a3a;
+            padding-bottom: 12px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+        .card {
+            background: #111827;
+            border-radius: 28px;
+            padding: 16px 12px;
+            text-align: center;
+            backdrop-filter: blur(2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            transition: 0.2s;
+            border: 1px solid #1e2a3a;
+        }
+        .card:active { transform: scale(0.97); }
+        button {
+            background: #1f2a3e;
+            border: none;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            padding: 10px 14px;
+            border-radius: 60px;
+            width: 100%;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+        button:active { background: #2d3a50; transform: scale(0.96); }
+        .icon { font-size: 2rem; margin-bottom: 6px; display: inline-block; }
+        .danger-btn { background: #7f1a1a; }
+        .danger-btn:active { background: #991b1b; }
+        .info-text {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            word-break: break-all;
+            margin-top: 6px;
+        }
+        .video-container {
+            background: #000;
+            border-radius: 24px;
+            overflow: hidden;
+            margin: 16px 0;
+            position: relative;
+            aspect-ratio: 4 / 3;
+        }
+        video, #camera-preview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .location-box {
+            background: #0f172a;
+            border-radius: 20px;
+            padding: 12px;
+            margin: 12px 0;
+            font-family: monospace;
+            font-size: 0.85rem;
+        }
+        .gallery-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .gallery-img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 1px solid #334155;
+        }
+        .lock-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(12px);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .lock-input {
+            background: #1f2937;
+            border: 2px solid #2dd4bf;
+            padding: 16px 20px;
+            font-size: 2rem;
+            text-align: center;
+            width: 200px;
+            border-radius: 60px;
+            color: white;
+            letter-spacing: 8px;
+        }
+        .lock-btn {
+            width: auto;
+            padding: 12px 28px;
+            background: #2dd4bf;
+            color: #0f172a;
+        }
+        .hidden { display: none; }
+        .status-badge {
+            background: #059669;
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            margin-left: 6px;
+        }
+        hr { border-color: #1e2a3a; margin: 16px 0; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📱 CTRL PANEL</h1>
+    <div class="sub">🔗 akses via IP lokal | semua fitur aktif</div>
+
+    <div class="grid">
+        <div class="card">
+            <div class="icon">🔦</div>
+            <div>SENTER</div>
+            <button id="torchBtn">AKTIFKAN</button>
+            <div id="torchStatus" class="info-text">● mati</div>
+        </div>
+        <div class="card">
+            <div class="icon">📸</div>
+            <div>KAMERA</div>
+            <button id="startCamBtn">NYALAKAN</button>
+            <button id="captureBtn" style="margin-top:5px;">FOTO</button>
+        </div>
+        <div class="card">
+            <div class="icon">📍</div>
+            <div>LOKASI REAL TIME</div>
+            <button id="getLocBtn">DAPATKAN</button>
+            <div id="locDisplay" class="info-text">- / -</div>
+        </div>
+        <div class="card">
+            <div class="icon">📁</div>
+            <div>GALERI</div>
+            <input type="file" id="galleryInput" accept="image/*,video/*" multiple style="margin:6px 0; width:100%">
+            <div id="galleryPreview" class="gallery-grid"></div>
+        </div>
+        <div class="card">
+            <div class="icon">📳</div>
+            <div>GETARAN</div>
+            <button id="vibe1">Getar 200ms</button>
+            <button id="vibe2" style="margin-top:5px;">Getar panjang</button>
+        </div>
+        <div class="card">
+            <div class="icon">🔒</div>
+            <div>LOCK DEVICE</div>
+            <button id="lockBtn" class="danger-btn">KUNCI (kode 123)</button>
+        </div>
+    </div>
+
+    <!-- YouTube + TikTok embed -->
+    <div class="grid">
+        <div class="card">
+            <div class="icon">▶️</div>
+            <div>YouTube</div>
+            <input type="text" id="ytLink" placeholder="ID video atau URL" value="dQw4w9WgXcQ" style="width:100%; margin:8px 0; padding:6px; border-radius:30px; border:none; text-align:center">
+            <button id="playYtBtn">PUTAR</button>
+            <div id="ytPlayer" style="margin-top:10px;"></div>
+        </div>
+        <div class="card">
+            <div class="icon">🎵</div>
+            <div>TikTok</div>
+            <input type="text" id="ttLink" placeholder="Username atau URL" value="therock" style="width:100%; margin:8px 0; padding:6px; border-radius:30px;">
+            <button id="loadTtBtn">BUKA</button>
+            <div id="ttContainer" style="margin-top:8px; font-size:12px;"></div>
+        </div>
+    </div>
+
+    <div class="location-box">
+        🌐 IP JARINGAN KARTU: <span id="localIp">mendeteksi...</span><br>
+        📡 Status: <span id="netStatus">online</span>
+    </div>
+</div>
+
+<div id="lockScreen" class="lock-overlay hidden">
+    <div style="background:#0f172a; padding:32px; border-radius:48px; text-align:center; width:80%; max-width:300px;">
+        <div class="icon">🔐</div>
+        <h3>Device Terkunci</h3>
+        <input type="password" id="lockPin" class="lock-input" placeholder="kode" maxlength="3" inputmode="numeric">
+        <button id="unlockBtn" class="lock-btn">BUKA</button>
+        <div id="pinError" style="color:#f87171; margin-top:10px;"></div>
+    </div>
+</div>
+
+<script>
+    // -------------------- SENTER (Flash/Torch) --------------------
+    let mediaStreamTrack = null;
+    let torchAvailable = false;
+    const torchBtn = document.getElementById('torchBtn');
+    const torchStatus = document.getElementById('torchStatus');
+    let torchActive = false;
+
+    async function initTorch() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+            const track = stream.getVideoTracks()[0];
+            const capabilities = track.getCapabilities();
+            if (capabilities.torch) {
+                torchAvailable = true;
+                mediaStreamTrack = track;
+                torchStatus.innerText = '✅ siap pakai';
+            } else {
+                torchStatus.innerText = '❌ torch tidak support';
+                torchBtn.disabled = true;
+            }
+            // jangan matikan stream dulu, simpan
+        } catch (err) {
+            torchStatus.innerText = '❌ izin kamera ditolak';
+            torchBtn.disabled = true;
+        }
+    }
+
+    torchBtn.onclick = async () => {
+        if (!torchAvailable && mediaStreamTrack === null) {
+            await initTorch();
+            if (!torchAvailable) return;
+        }
+        if (mediaStreamTrack) {
+            try {
+                if (!torchActive) {
+                    await mediaStreamTrack.applyConstraints({ advanced: [{ torch: true }] });
+                    torchActive = true;
+                    torchBtn.innerText = 'MATIKAN';
+                    torchStatus.innerText = '● menyala';
+                } else {
+                    await mediaStreamTrack.applyConstraints({ advanced: [{ torch: false }] });
+                    torchActive = false;
+                    torchBtn.innerText = 'AKTIFKAN';
+                    torchStatus.innerText = '● mati';
+                }
+            } catch(e) { torchStatus.innerText = 'gagal ganti torch'; }
+        } else { initTorch(); }
+    };
+
+    // -------------------- KAMERA PREVIEW + CAPTURE --------------------
+    const startCamBtn = document.getElementById('startCamBtn');
+    const captureBtn = document.getElementById('captureBtn');
+    let cameraStream = null;
+    let videoElem = null;
+    function addVideoElement() {
+        if(!document.getElementById('dynamicCamera')) {
+            const container = document.createElement('div');
+            container.className = 'video-container';
+            container.id = 'camContainer';
+            container.innerHTML = '<video id="camera-preview" autoplay playsinline></video><button id="stopCamBtn" style="position:absolute; bottom:8px; right:8px; background:#000000aa; width:auto; padding:6px 12px;">Tutup Kamera</button>';
+            startCamBtn.parentNode.after(container);
+            videoElem = document.getElementById('camera-preview');
+            document.getElementById('stopCamBtn').onclick = () => {
+                if(cameraStream) cameraStream.getTracks().forEach(t => t.stop());
+                document.getElementById('camContainer')?.remove();
+                cameraStream = null;
+            };
+        }
+        videoElem = document.getElementById('camera-preview');
+    }
+    startCamBtn.onclick = async () => {
+        try {
+            if(cameraStream) { cameraStream.getTracks().forEach(t=>t.stop()); cameraStream=null; }
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+            cameraStream = stream;
+            addVideoElement();
+            if(videoElem) videoElem.srcObject = stream;
+        } catch(e) { alert('gagal akses kamera: '+e.message); }
+    };
+    captureBtn.onclick = () => {
+        if(!videoElem || !cameraStream) { alert('hidupkan kamera dulu'); return; }
+        const canvas = document.createElement('canvas');
+        canvas.width = videoElem.videoWidth;
+        canvas.height = videoElem.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(videoElem, 0, 0, canvas.width, canvas.height);
+        const link = document.createElement('a');
+        link.download = `capture_${Date.now()}.png`;
+        link.href = canvas.toDataURL();
+        link.click();
+    };
+
+    // -------------------- LOKASI REAL TIME --------------------
+    const getLocBtn = document.getElementById('getLocBtn');
+    const locDisplay = document.getElementById('locDisplay');
+    let watchId = null;
+    getLocBtn.onclick = () => {
+        if(watchId) {
+            navigator.geolocation.clearWatch(watchId);
+            watchId = null;
+            getLocBtn.innerText = 'DAPATKAN';
+            locDisplay.innerHTML = '- / - (berhenti)';
+            return;
+        }
+        if(!navigator.geolocation) { locDisplay.innerHTML = 'GPS tidak support'; return; }
+        watchId = navigator.geolocation.watchPosition((pos) => {
+            const lat = pos.coords.latitude.toFixed(6);
+            const lng = pos.coords.longitude.toFixed(6);
+            const acc = pos.coords.accuracy;
+            locDisplay.innerHTML = `📍 ${lat}, ${lng}<br>🎯 akurasi ±${acc}m<br>🕒 realtime`;
+            getLocBtn.innerText = 'HENTIKAN';
+        }, (err) => {
+            locDisplay.innerHTML = `❌ error: ${err.message}`;
+            getLocBtn.innerText = 'DAPATKAN';
+            watchId = null;
+        }, { enableHighAccuracy: true, maximumAge: 0 });
+    };
+
+    // -------------------- GALERI (akses file lokal) --------------------
+    const galleryInput = document.getElementById('galleryInput');
+    const galleryPreview = document.getElementById('galleryPreview');
+    galleryInput.addEventListener('change', (e) => {
+        const files = Array.from(e.target.files);
+        galleryPreview.innerHTML = '';
+        files.forEach(file => {
+            const url = URL.createObjectURL(file);
+            const img = document.createElement('img');
+            img.src = url;
+            img.className = 'gallery-img';
+            img.onclick = () => { window.open(url); };
+            galleryPreview.appendChild(img);
+        });
+    });
+
+    // -------------------- GETARAN --------------------
+    document.getElementById('vibe1').onclick = () => { if(navigator.vibrate) navigator.vibrate(200); else alert('vibrate tidak support'); };
+    document.getElementById('vibe2').onclick = () => { if(navigator.vibrate) navigator.vibrate([500,200,500]); else alert('tidak support'); };
+
+    // -------------------- LOCK DEVICE (kode 123) overlay --------------------
+    const lockScreenDiv = document.getElementById('lockScreen');
+    const lockBtn = document.getElementById('lockBtn');
+    const unlockBtn = document.getElementById('unlockBtn');
+    const lockPinInput = document.getElementById('lockPin');
+    const pinErrorSpan = document.getElementById('pinError');
+
+    function lockDevice() {
+        lockScreenDiv.classList.remove('hidden');
+        lockPinInput.value = '';
+        pinErrorSpan.innerText = '';
+    }
+    lockBtn.onclick = lockDevice;
+    unlockBtn.onclick = () => {
+        if(lockPinInput.value === '123') {
+            lockScreenDiv.classList.add('hidden');
+        } else {
+            pinErrorSpan.innerText = 'kode salah! harus 123';
+        }
+    };
+    lockPinInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') unlockBtn.click(); });
+
+    // -------------------- YouTube embed --------------------
+    const playYtBtn = document.getElementById('playYtBtn');
+    const ytLink = document.getElementById('ytLink');
+    const ytPlayerDiv = document.getElementById('ytPlayer');
+    playYtBtn.onclick = () => {
+        let videoId = ytLink.value.trim();
+        const urlPattern = /(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+        const match = videoId.match(urlPattern);
+        if(match) videoId = match[1];
+        if(videoId.length === 11) {
+            ytPlayerDiv.innerHTML = `<iframe width="100%" height="200" src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" allowfullscreen></iframe>`;
+        } else {
+            ytPlayerDiv.innerHTML = `<iframe width="100%" height="200" src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" allowfullscreen></iframe>`;
+        }
+    };
+
+    // -------------------- TikTok (redirect / embed resmi terbatas, pakai iframe redirect) --------------------
+    const loadTtBtn = document.getElementById('loadTtBtn');
+    const ttContainer = document.getElementById('ttContainer');
+    loadTtBtn.onclick = () => {
+        let input = document.getElementById('ttLink').value.trim();
+        if(!input) input = 'therock';
+        let tiktokUrl = '';
+        if(input.includes('tiktok.com')) tiktokUrl = input;
+        else tiktokUrl = `https://www.tiktok.com/@${input}`;
+        ttContainer.innerHTML = `<iframe src="${tiktokUrl}" style="width:100%; height:280px; border-radius:20px; border:none;"></iframe><br><a href="${tiktokUrl}" target="_blank" style="color:#2dd4bf;">Buka di TikTok</a>`;
+    };
+
+    // -------------------- IP JARINGAN KARTU (deteksi IP lokal via WebRTC) --------------------
+    function getLocalIP() {
+        const ipSpan = document.getElementById('localIp');
+        const pc = new RTCPeerConnection({ iceServers: [] });
+        pc.createDataChannel('');
+        pc.createOffer().then(offer => pc.setLocalDescription(offer));
+        pc.onicecandidate = (ice) => {
+            if(!ice.candidate) return;
+            const ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3})/;
+            const match = ipRegex.exec(ice.candidate.candidate);
+            if(match) {
+                ipSpan.innerText = match[1];
+                pc.close();
+            }
+        };
+        setTimeout(() => { if(ipSpan.innerText === 'mendeteksi...') ipSpan.innerText = 'tidak terdeteksi (coba konek wifi)'; }, 2000);
+    }
+    getLocalIP();
+
+    // auto init torch ketika halaman dimuat
+    window.addEventListener('load', () => {
+        initTorch();
+        // Cek status jaringan
+        window.addEventListener('online', () => document.getElementById('netStatus').innerText='online');
+        window.addEventListener('offline', () => document.getElementById('netStatus').innerText='offline');
+    });
+</script>
+</body>
+</html>
