@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Σ X-DASH | Ultimate HP Control Terminal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --bg-dark: #0a0c15;
+            --bg-card: #0f172ae6;
+            --bg-elevated: #111827;
+            --border: #1e293b;
+            --cyan: #06b6d4;
+            --purple: #8b5cf6;
+            --pink: #ec4899;
+            --green: #10b981;
+            --orange: #f59e0b;
+            --red: #ef4444;
+            --text: #f1f5f9;
+            --text-dim: #94a3b8;
+        }
+
+        body {
+            background: var(--bg-dark);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            padding: 16px 14px 80px;
+            color: var(--text);
+        }
+
+        .container {
+            max-width: 560px;
+            margin: 0 auto;
+        }
+
+        /* header */
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #06b6d4, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .badge-row {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 6px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            background: var(--bg-elevated);
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.65rem;
+            border: 1px solid var(--border);
+        }
+
+        /* status bar */
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            background: var(--bg-elevated);
+            border-radius: 28px;
+            padding: 12px;
+            margin-bottom: 18px;
+            border: 1px solid var(--border);
+        }
+        .status-item {
+            text-align: center;
+        }
+        .status-value {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--cyan);
+        }
+        .status-label {
+            font-size: 0.6rem;
+            color: var(--text-dim);
+        }
+
+        /* ip panel */
+        .ip-panel {
+            background: var(--bg-elevated);
+            border-radius: 24px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+        .ip-addr {
+            font-family: monospace;
+            background: #00000066;
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+        }
+        .ip-btn {
+            background: #1e293b;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 30px;
+            color: white;
+            font-size: 0.7rem;
+            cursor: pointer;
+        }
+
+        /* section title */
+        .section-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin: 20px 0 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: -0.2px;
+        }
+
+        /* grid systems */
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .cmd-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border-radius: 22px;
+            padding: 12px 4px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.08s linear;
+            border: 1px solid var(--border);
+        }
+        .cmd-card:active {
+            transform: scale(0.96);
+            background: #1e2a3a;
+        }
+        .cmd-emoji {
+            font-size: 1.6rem;
+            display: block;
+        }
+        .cmd-name {
+            font-size: 0.7rem;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+        .cmd-desc {
+            font-size: 0.55rem;
+            color: var(--text-dim);
+        }
+
+        /* kamera live */
+        .camera-box {
+            background: var(--bg-elevated);
+            border-radius: 32px;
+            padding: 14px;
+            margin: 16px 0;
+            border: 1px solid var(--border);
+        }
+        .video-preview {
+            background: #000000aa;
+            border-radius: 24px;
+            overflow: hidden;
+            min-height: 190px;
+        }
+        video {
+            width: 100%;
+            max-height: 240px;
+            object-fit: cover;
+            display: block;
+        }
+        .cam-placeholder {
+            padding: 40px 20px;
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.8rem;
+        }
+        .cam-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 12px;
+        }
+        .cam-btn {
+            background: #1e293b;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 40px;
+            color: white;
+            font-size: 0.7rem;
+            cursor: pointer;
+        }
+        .cam-btn-primary {
+            background: var(--cyan);
+            color: #0f172a;
+            font-weight: bold;
+        }
+
+        /* slider & toggle */
+        .control-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .toggle {
+            width: 44px;
+            height: 24px;
+            background: #334155;
+            border-radius: 30px;
+            position: relative;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .toggle.active {
+            background: var(--green);
+        }
+        .toggle::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: 0.2s;
+        }
+        .toggle.active::after {
+            left: 22px;
+        }
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            margin-bottom: 6px;
+        }
+        input[type="range"] {
+            width: 100%;
+            height: 4px;
+            -webkit-appearance: none;
+            background: #334155;
+            border-radius: 10px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--cyan);
+            cursor: pointer;
+        }
+
+        /* media row apps */
+        .media-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 10px 0;
+        }
+        .media-app {
+            flex: 1;
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border-radius: 50px;
+            padding: 10px 0;
+            text-align: center;
+            font-size: 0.7rem;
+            font-weight: 500;
+            border: 1px solid #334155;
+            cursor: pointer;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e293bdd;
+            backdrop-filter: blur(20px);
+            padding: 8px 22px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            z-index: 1000;
+            opacity: 0;
+            transition: 0.2s;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.6rem;
+            color: #4b556b;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>⚡ X-DASH TERMINAL</h1>
+        <div class="badge-row">
+            <span class="badge">🔓 No Filter</span>
+            <span class="badge">🎮 50+ Fitur</span>
+            <span class="badge">📡 Full Control</span>
+        </div>
+    </div>
+
+    <!-- status dinamis -->
+    <div class="status-grid">
+        <div class="status-item"><div class="status-value" id="battLevel">--%</div><div class="status-label">Baterai</div></div>
+        <div class="status-item"><div class="status-value" id="timeNow">--:--</div><div class="status-label">Waktu</div></div>
+        <div class="status-item"><div class="status-value" id="netType">--</div><div class="status-label">Jaringan</div></div>
+        <div class="status-item"><div class="status-value" id="storageInfo">--GB</div><div class="status-label">Storage</div></div>
+    </div>
+
+    <!-- IP Panel -->
+    <div class="ip-panel">
+        <div><span class="ip-addr" id="localIpAddr">📡 local: detecting...</span><span class="ip-addr" id="publicIpAddr">🌍 public: ...</span></div>
+        <div><button class="ip-btn" id="copyIpBtn">📋 Salin IP</button><button class="ip-btn" id="shareIpBtn">🔗 Share</button></div>
+    </div>
+
+    <!-- ========== SECTION 1: PERINTAH DASAR 12 FITUR ========= -->
+    <div class="section-title">🎛️ KONTROL UTAMA</div>
+    <div class="grid-4">
+        <div class="cmd-card" id="torchAction"><span class="cmd-emoji">🔦</span><span class="cmd-name">Senter</span><span class="cmd-desc">On/Off</span></div>
+        <div class="cmd-card" id="vibeAction"><span class="cmd-emoji">📳</span><span class="cmd-name">Getar</span><span class="cmd-desc">100ms</span></div>
+        <div class="cmd-card" id="flashMaxAction"><span class="cmd-emoji">💡⚡</span><span class="cmd-name">Max Flash</span><span class="cmd-desc">Terang</span></div>
+        <div class="cmd-card" id="screenCapAction"><span class="cmd-emoji">📸</span><span class="cmd-name">Screenshot</span><span class="cmd-desc">Capture</span></div>
+        <div class="cmd-card" id="brightUp"><span class="cmd-emoji">☀️+</span><span class="cmd-name">Bright+</span><span class="cmd-desc">+10%</span></div>
+        <div class="cmd-card" id="brightDown"><span class="cmd-emoji">🌙-</span><span class="cmd-name">Bright-</span><span class="cmd-desc">-10%</span></div>
+        <div class="cmd-card" id="volUp"><span class="cmd-emoji">🔊+</span><span class="cmd-name">Volume+</span><span class="cmd-desc">Naik</span></div>
+        <div class="cmd-card" id="volDown"><span class="cmd-emoji">🔉-</span><span class="cmd-name">Volume-</span><span class="cmd-desc">Turun</span></div>
+        <div class="cmd-card" id="lockScreenBtn"><span class="cmd-emoji">🔒</span><span class="cmd-name">Lock Screen</span><span class="cmd-desc">Kunci</span></div>
+        <div class="cmd-card" id="homeBtnEmu"><span class="cmd-emoji">🏠</span><span class="cmd-name">Home</span><span class="cmd-desc">Simulasi</span></div>
+        <div class="cmd-card" id="recentsBtn"><span class="cmd-emoji">🪟</span><span class="cmd-name">Recents</span><span class="cmd-desc">Multitask</span></div>
+        <div class="cmd-card" id="powerDialogBtn"><span class="cmd-emoji">⏻</span><span class="cmd-name">Power Menu</span><span class="cmd-desc">Dialog</span></div>
+    </div>
+
+    <!-- ========== KAMERA & SENTER LANJUTAN ========= -->
+    <div class="camera-box">
+        <div style="display: flex; justify-content: space-between;"><span>🎥 CAMERA MODULE</span><span id="torchIndicator" style="font-size:0.65rem;">⚫ Senter Off</span></div>
+        <div class="video-preview">
+            <video id="videoElem" autoplay playsinline muted style="display:none;"></video>
+            <div id="camPlaceholder" class="cam-placeholder">📷 Kamera tidak aktif<br>Tekan Nyalakan</div>
+        </div>
+        <div class="cam-buttons">
+            <button class="cam-btn cam-btn-primary" id="startCameraBtn">📷 Nyalakan</button>
+            <button class="cam-btn" id="stopCameraBtn">⏹️ Matikan</button>
+            <button class="cam-btn" id="takePhotoBtn">🖼️ Foto</button>
+            <button class="cam-btn" id="torchCamBtn">🔦 Senter</button>
+            <button class="cam-btn" id="switchCameraBtn">🔄 Ganti Kamera</button>
+        </div>
+    </div>
+
+    <!-- ========== MEDIA SOSIAL + APPS (12 APPS) ========= -->
+    <div class="section-title">📱 APLIKASI & MEDIA</div>
+    <div class="media-row">
+        <div class="media-app" data-app="youtube">▶️ YouTube</div>
+        <div class="media-app" data-app="tiktok">🎵 TikTok</div>
+        <div class="media-app" data-app="instagram">📸 IG</div>
+        <div class="media-app" data-app="whatsapp">💬 WA</div>
+    </div>
+    <div class="media-row">
+        <div class="media-app" data-app="twitter">🐦 X</div>
+        <div class="media-app" data-app="spotify">🎧 Spotify</div>
+        <div class="media-app" data-app="telegram">✈️ Telegram</div>
+        <div class="media-app" data-app="facebook">📘 FB</div>
+    </div>
+    <div class="media-row">
+        <div class="media-app" data-app="snapchat">👻 Snapchat</div>
+        <div class="media-app" data-app="netflix">🎬 Netflix</div>
+        <div class="media-app" data-app="discord">🎙️ Discord</div>
+        <div class="media-app" data-app="chrome">🌐 Chrome</div>
+    </div>
+
+    <!-- ========== SENSOR & PERANGKAT KERAS ========= -->
+    <div class="section-title">📡 SENSOR & PERANGKAT</div>
+    <div class="grid-3">
+        <div class="cmd-card" id="getLocationBtn"><span class="cmd-emoji">📍</span><span class="cmd-name">Lokasi</span><span class="cmd-desc">GPS</span></div>
+        <div class="cmd-card" id="batteryInfoBtn"><span class="cmd-emoji">🔋</span><span class="cmd-name">Info Baterai</span><span class="cmd-desc">Detail</span></div>
+        <div class="cmd-card" id="deviceMotionBtn"><span class="cmd-emoji">📳</span><span class="cmd-name">Gyro/Accel</span><span class="cmd-desc">Live</span></div>
+        <div class="cmd-card" id="lightSensorBtn"><span class="cmd-emoji">💡</span><span class="cmd-name">Sensor Cahaya</span><span class="cmd-desc">Ambient</span></div>
+        <div class="cmd-card" id="orientationBtn"><span class="cmd-emoji">🧭</span><span class="cmd-name">Orientasi</span><span class="cmd-desc">Compass</span></div>
+        <div class="cmd-card" id="vibrationPatternBtn"><span class="cmd-emoji">📳✨</span><span class="cmd-name">Getar Pattern</span><span class="cmd-desc">3x</span></div>
+    </div>
+
+    <!-- ========== LANJUTAN: FILE, SHARE, SCREEN REC, QR ========= -->
+    <div class="section-title">⚙️ POWER USER</div>
+    <div class="grid-2">
+        <div class="cmd-card" id="screenRecordBtn"><span class="cmd-emoji">⏺️</span><span class="cmd-name">Rekam Layar</span><span class="cmd-desc">Start/Stop</span></div>
+        <div class="cmd-card" id="fullscreenToggle"><span class="cmd-emoji">🖥️</span><span class="cmd-name">Fullscreen</span><span class="cmd-desc">Mode</span></div>
+        <div class="cmd-card" id="orientationLockBtn"><span class="cmd-emoji">📱🔒</span><span class="cmd-name">Lock Portrait</span><span class="cmd-desc">Kunci</span></div>
+        <div class="cmd-card" id="notifyBtn"><span class="cmd-emoji">🔔</span><span class="cmd-name">Test Notif</span><span class="cmd-desc">Pop up</span></div>
+        <div class="cmd-card" id="shareTextBtn"><span class="cmd-emoji">📤</span><span class="cmd-name">Share Teks</span><span class="cmd-desc">Bagikan</span></div>
+        <div class="cmd-card" id="qrcodeGenBtn"><span class="cmd-emoji">📱🔲</span><span class="cmd-name">Buat QR</span><span class="cmd-desc">Link Halaman</span></div>
+        <div class="cmd-card" id="clipboardWriteBtn"><span class="cmd-emoji">📋✍️</span><span class="cmd-name">Copy Teks</span><span class="cmd-desc">Salin</span></div>
+        <div class="cmd-card" id="speechBtn"><span class="cmd-emoji">🗣️</span><span class="cmd-name">Text to Speech</span><span class="cmd-desc">Suara</span></div>
+    </div>
+
+    <!-- ========== SLIDER: KECERAHAN + VOLUME LANJUTAN ========= -->
+    <div class="control-row"><span>🌞 Kecerahan Sistem</span><span id="brightPercent">70%</span></div>
+    <input type="range" id="brightSlider" min="0" max="100" value="70">
+    <div class="control-row"><span>🔊 Volume Media</span><span id="volPercent">50%</span></div>
+    <input type="range" id="volSlider" min="0" max="100" value="50">
+    <div class="control-row"><span>📳 Vibrate on Touch</span><div class="toggle" id="vibToggle"></div></div>
+
+    <footer>X-DASH v3.0 • Semua fitur aktif tanpa batasan • Senter & kamera butuh izin</footer>
+</div>
+<div id="toastMsg" class="toast"></div>
+
+<script>
+    (function(){
+        // ---------- DOM elements ----------
+        const torchAction = document.getElementById('torchAction');
+        const vibeAction = document.getElementById('vibeAction');
+        const flashMaxAction = document.getElementById('flashMaxAction');
+        const screenCapAction = document.getElementById('screenCapAction');
+        const brightUp = document.getElementById('brightUp');
+        const brightDown = document.getElementById('brightDown');
+        const volUp = document.getElementById('volUp');
+        const volDown = document.getElementById('volDown');
+        const lockScreenBtn = document.getElementById('lockScreenBtn');
+        const homeBtnEmu = document.getElementById('homeBtnEmu');
+        const recentsBtn = document.getElementById('recentsBtn');
+        const powerDialogBtn = document.getElementById('powerDialogBtn');
+        const startCameraBtn = document.getElementById('startCameraBtn');
+        const stopCameraBtn = document.getElementById('stopCameraBtn');
+        const takePhotoBtn = document.getElementById('takePhotoBtn');
+        const torchCamBtn = document.getElementById('torchCamBtn');
+        const switchCameraBtn = document.getElementById('switchCameraBtn');
+        const getLocationBtn = document.getElementById('getLocationBtn');
+        const batteryInfoBtn = document.getElementById('batteryInfoBtn');
+        const deviceMotionBtn = document.getElementById('deviceMotionBtn');
+        const lightSensorBtn = document.getElementById('lightSensorBtn');
+        const orientationBtn = document.getElementById('orientationBtn');
+        const vibrationPatternBtn = document.getElementById('vibrationPatternBtn');
+        const screenRecordBtn = document.getElementById('screenRecordBtn');
+        const fullscreenToggle = document.getElementById('fullscreenToggle');
+        const orientationLockBtn = document.getElementById('orientationLockBtn');
+        const notifyBtn = document.getElementById('notifyBtn');
+        const shareTextBtn = document.getElementById('shareTextBtn');
+        const qrcodeGenBtn = document.getElementById('qrcodeGenBtn');
+        const clipboardWriteBtn = document.getElementById('clipboardWriteBtn');
+        const speechBtn = document.getElementById('speechBtn');
+        const brightSlider = document.getElementById('brightSlider');
+        const volSlider = document.getElementById('volSlider');
+        const vibToggle = document.getElementById('vibToggle');
+        const brightPercent = document.getElementById('brightPercent');
+        const volPercent = document.getElementById('volPercent');
+        const videoElem = document.getElementById('videoElem');
+        const camPlaceholder = document.getElementById('camPlaceholder');
+        const torchIndicator = document.getElementById('torchIndicator');
+        const localIpSpan = document.getElementById('localIpAddr');
+        const publicIpSpan = document.getElementById('publicIpAddr');
+        const copyIpBtn = document.getElementById('copyIpBtn');
+        const shareIpBtn = document.getElementById('shareIpBtn');
+
+        let mediaStream = null;
+        let torchActive = false;
+        let recording = false;
+        let mediaRecorder = null;
+        let recordedChunks = [];
+        let currentFacing = "environment";
+        let orientationLocked = false;
+
+        function showToast(msg, dur=1600){
+            const t = document.getElementById('toastMsg');
+            t.innerText = msg;
+            t.style.opacity = '1';
+            setTimeout(()=> t.style.opacity = '0', dur);
+        }
+
+        // SENTER CORE
+        async function setTorch(state){
+            if(!mediaStream){
+                try{
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+                    const track = stream.getVideoTracks()[0];
+                    if(track && track.getCapabilities().torch){
+                        await track.applyConstraints({ advanced: [{ torch: state }] });
+                        torchActive = state;
+                        if(!mediaStream){
+                            mediaStream = stream;
+                            videoElem.srcObject = stream;
+                            videoElem.style.display = 'none';
+                            camPlaceholder.style.display = 'block';
+                        }
+                        torchIndicator.innerText = state ? "🔥 Senter ON" : "⚫ Senter Off";
+                        showToast(`Senter ${state ? "Menyala" : "Mati"}`);
+                        return;
+                    } else { stream.getTracks().forEach(t=>t.stop()); showToast("Tidak support torch"); }
+                } catch(e){ showToast("Izin kamera ditolak"); return; }
+            }
+            const track = mediaStream.getVideoTracks()[0];
+            if(track && track.getCapabilities().torch){
+                await track.applyConstraints({ advanced: [{ torch: state }] });
+                torchActive = state;
+                torchIndicator.innerText = state ? "🔥 Senter ON" : "⚫ Senter Off";
+                showToast(`Senter ${state ? "ON" : "OFF"}`);
+            } else showToast("Torch tidak support");
+        }
+        async function toggleTorch() { await setTorch(!torchActive); }
+        torchAction.onclick = toggleTorch;
+        torchCamBtn.onclick = toggleTorch;
+        flashMaxAction.onclick = ()=>{ setTorch(true); setTimeout(()=>setTorch(false), 800); showToast("Flash Max kilat"); };
+
+        // Vibrate
+        vibeAction.onclick = ()=>{ if(navigator.vibrate) navigator.vibrate(100); showToast("Getar 100ms"); };
+        vibrationPatternBtn.onclick = ()=>{ if(navigator.vibrate) navigator.vibrate([200,100,200]); showToast("Getar pattern"); };
+
+        // Screenshot (basic capture dari video jika ada)
+        screenCapAction.onclick = ()=>{
+            if(mediaStream && videoElem.videoWidth){
+                let canvas = document.createElement('canvas');
+                canvas.width = videoElem.videoWidth;
+                canvas.height = videoElem.videoHeight;
+                canvas.getContext('2d').drawImage(videoElem,0,0);
+                canvas.toBlob(blob=>{ let a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`ss_${Date.now()}.png`; a.click(); URL.revokeObjectURL(blob); showToast("Screenshot tersimpan"); });
+            } else { showToast("Nyalakan kamera untuk screenshot cepat"); }
+        };
+
+        // Brightness & Volume sliders
+        brightUp.onclick = ()=>{ let v=Math.min(100, parseInt(brightSlider.value)+10); brightSlider.value=v; brightPercent.innerText=v+"%"; if(screen && 'brightness' in screen) screen.brightness = v/100; else showToast(`Simulasi kecerahan ${v}%`); };
+        brightDown.onclick = ()=>{ let v=Math.max(0, parseInt(brightSlider.value)-10); brightSlider.value=v; brightPercent.innerText=v+"%"; if(screen && 'brightness' in screen) screen.brightness = v/100; else showToast(`Kecerahan ${v}%`); };
+        brightSlider.oninput = (e)=>{ brightPercent.innerText=e.target.value+"%"; if(screen && 'brightness' in screen) screen.brightness = e.target.value/100; };
+        volUp.onclick = ()=>{ let v=Math.min(100, parseInt(volSlider.value)+10); volSlider.value=v; volPercent.innerText=v+"%"; showToast(`Volume ${v}%`); };
+        volDown.onclick = ()=>{ let v=Math.max(0, parseInt(volSlider.value)-10); volSlider.value=v; volPercent.innerText=v+"%"; showToast(`Volume ${v}%`); };
+        volSlider.oninput = (e)=>{ volPercent.innerText=e.target.value+"%"; };
+
+        // Lock Screen & home recents (simulasi)
+        lockScreenBtn.onclick = ()=> showToast("🔒 Simulasi Lock Screen (tekan tombol power fisik)");
+        homeBtnEmu.onclick = ()=> showToast("🏠 Simulasi Home (tekan tombol home)");
+        recentsBtn.onclick = ()=> showToast("🪟 Recent apps (tombol task)");
+        powerDialogBtn.onclick = ()=> { if(confirm("Simulasi Power Menu? Tekan Power fisik untuk shutdown")) showToast("Power dialog simulated"); };
+
+        // Kamera
+        async function startCamera(facing = currentFacing){
+            if(mediaStream) stopCamera();
+            try{
+                let stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: facing } });
+                mediaStream = stream;
+                videoElem.srcObject = stream;
+                videoElem.style.display = 'block';
+                camPlaceholder.style.display = 'none';
+                torchActive = false;
+                torchIndicator.innerText = "⚫ Senter Off";
+                showToast(`Kamera ${facing === "environment" ? "Belakang" : "Depan"} aktif`);
+            } catch(e){ showToast("Izin kamera diperlukan"); }
+        }
+        function stopCamera(){
+            if(mediaStream){
+                mediaStream.getTracks().forEach(t=>t.stop());
+                mediaStream = null;
+                videoElem.srcObject = null;
+                videoElem.style.display = 'none';
+                camPlaceholder.style.display = 'block';
+                torchActive = false;
+                torchIndicator.innerText = "⚫ Senter Off";
+                showToast("Kamera mati");
+            }
+        }
+        startCameraBtn.onclick = ()=> startCamera(currentFacing);
+        stopCameraBtn.onclick = stopCamera;
+        takePhotoBtn.onclick = ()=>{
+            if(!mediaStream || !videoElem.videoWidth){ showToast("Aktifkan kamera dulu"); return; }
+            let canvas = document.createElement('canvas');
+            canvas.width = videoElem.videoWidth;
+            canvas.height = videoElem.videoHeight;
+            canvas.getContext('2d').drawImage(videoElem,0,0);
+            canvas.toBlob(blob=>{ let a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`foto_${Date.now()}.jpg`; a.click(); URL.revokeObjectURL(blob); showToast("Foto tersimpan"); },'image/jpeg',0.9);
+        };
+        switchCameraBtn.onclick = ()=>{
+            currentFacing = currentFacing === "environment" ? "user" : "environment";
+            if(mediaStream) startCamera(currentFacing);
+            else showToast(`Ganti ke kamera ${currentFacing === "environment" ? "Belakang" : "Depan"}`);
+        };
+
+        // Geolokasi
+        getLocationBtn.onclick = ()=>{
+            navigator.geolocation.getCurrentPosition(pos=>{
+                showToast(`Lat: ${pos.coords.latitude.toFixed(4)}, Lng: ${pos.coords.longitude.toFixed(4)}`);
+            },()=> showToast("Izin lokasi ditolak"));
+        };
+        batteryInfoBtn.onclick = ()=>{
+            if(navigator.getBattery){
+                navigator.getBattery().then(b=>{ showToast(`Battery: ${Math.floor(b.level*100)}%, charging: ${b.charging}`); });
+            } else showToast("Battery API tidak support");
+        };
+        deviceMotionBtn.onclick = ()=>{
+            if(DeviceMotionEvent){
+                window.addEventListener('devicemotion', (e)=>{ showToast(`Akselerasi: ${e.acceleration?.x?.toFixed(1)}`,1000); }, {once:true});
+                showToast("Gerakkan HP untuk deteksi");
+            } else showToast("Motion tidak support");
+        };
+        lightSensorBtn.onclick = ()=>{ if('AmbientLightSensor' in window) showToast("Sensor cahaya tersedia"); else showToast("Tidak ada ambient light"); };
+        orientationBtn.onclick = ()=>{ showToast(`Orientation: ${screen.orientation?.type || "tidak tahu"}`); };
+        
+        // Screen record
+        screenRecordBtn.onclick = async ()=>{
+            if(recording){
+                if(mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop();
+                recording=false; screenRecordBtn.innerText="⏺️ Rekam Layar"; showToast("Rekaman berhenti");
+                return;
+            }
+            try{
+                let stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+                recordedChunks = [];
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.ondataavailable = e=>{ if(e.data.size>0) recordedChunks.push(e.data); };
+                mediaRecorder.onstop = ()=>{
+                    let blob = new Blob(recordedChunks, {type: 'video/mp4'});
+                    let a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`record_${Date.now()}.mp4`; a.click(); URL.revokeObjectURL(blob); stream.getTracks().forEach(t=>t.stop());
+                };
+                mediaRecorder.start(1000);
+                recording=true;
+                screenRecordBtn.innerText="⏹️ Stop Rekam";
+                showToast("Merekam layar...");
+            } catch(e){ showToast("Gagal rekam layar"); }
+        };
+        fullscreenToggle.onclick = ()=>{ document.documentElement.requestFullscreen(); showToast("Fullscreen"); };
+        orientationLockBtn.onclick = ()=>{
+            if(screen.orientation && screen.orientation.lock){
+                if(!orientationLocked) screen.orientation.lock("portrait").then(()=>{ orientationLocked=true; showToast("Portrait terkunci"); });
+                else { screen.orientation.unlock(); orientationLocked=false; showToast("Unlock orientasi"); }
+            } else showToast("Tidak support lock");
+        };
+        notifyBtn.onclick = ()=>{
+            if(Notification.permission === "granted") new Notification("X-DASH", {body:"Semua fitur aktif tanpa batasan"});
+            else Notification.requestPermission();
+        };
+        shareTextBtn.onclick = ()=>{ if(navigator.share) navigator.share({title:"X-DASH", text:"Kontrol HP total"}); else showToast("Share tidak support"); };
+        qrcodeGenBtn.onclick = ()=>{ showToast("QR: "+window.location.href); };
+        clipboardWriteBtn.onclick = ()=>{ navigator.clipboard.writeText("X-DASH Full Control"); showToast("Teks tersalin"); };
+        speechBtn.onclick = ()=>{ let utterance = new SpeechSynthesisUtterance("X-DASH aktif, semua fitur tanpa batasan"); speechSynthesis.speak(utterance); };
+        
+        // IP Address
+        async function getLocalIP(){
+            return new Promise(res=>{
+                let pc = new RTCPeerConnection({iceServers:[]});
+                pc.createDataChannel('');
+                pc.createOffer().then(o=>pc.setLocalDescription(o));
+                pc.onicecandidate = (ice)=>{
+                    if(!ice.candidate) return;
+                    let ip = ice.candidate.candidate.match(/(\d+\.\d+\.\d+\.\d+)/);
+                    if(ip && (ip[0].startsWith("192.168")||ip[0].startsWith("10.")||ip[0].startsWith("172."))) { res(ip[0]); pc.close(); }
+                };
+                setTimeout(()=>{ res("192.168.x.x"); pc.close(); },1200);
+            });
+        }
+        async function getPublicIP(){ try{ let r=await fetch('https://api.ipify.org?format=json'); let d=await r.json(); return d.ip; } catch(e){ return "gagal"; } }
+        (async()=>{
+            let local = await getLocalIP();
+            let pub = await getPublicIP();
+            localIpSpan.innerText = `📡 local: ${local}`;
+            publicIpSpan.innerText = `🌍 public: ${pub}`;
+            window.myLocalIp = local;
+        })();
+        copyIpBtn.onclick = ()=>{ if(window.myLocalIp) { navigator.clipboard.writeText(window.myLocalIp); showToast("IP lokal disalin"); } };
+        shareIpBtn.onclick = ()=>{ if(navigator.share && window.myLocalIp) navigator.share({title:"IP Control", text:window.myLocalIp}); else showToast("Share manual"); };
+        
+        // toggle vibrate mode
+        vibToggle.onclick = function(){ this.classList.toggle('active'); showToast(this.classList.contains('active')?"Vibrasi mode ON":"OFF"); };
+        
+        // Media Apps
+        const apps = { youtube:"youtube://", tiktok:"snssdk1233://", instagram:"instagram://", whatsapp:"whatsapp://", twitter:"twitter://", spotify:"spotify://", telegram:"tg://", facebook:"fb://", snapchat:"snapchat://", netflix:"netflix://", discord:"discord://", chrome:"googlechrome://" };
+        document.querySelectorAll('.media-app').forEach(el=>{
+            el.onclick = ()=>{
+                let app = el.getAttribute('data-app');
+                let scheme = apps[app] || "https://www.google.com";
+                let fallback = `https://${app}.com`;
+                if(app==='youtube') fallback="https://m.youtube.com";
+                if(app==='tiktok') fallback="https://www.tiktok.com";
+                let ifr = document.createElement('iframe'); ifr.style.display='none'; ifr.src=scheme; document.body.appendChild(ifr);
+                setTimeout(()=>{ document.body.removeChild(ifr); window.location.href=fallback; },800);
+            };
+        });
+        
+        // status updates
+        function updateStatus(){
+            let d=new Date(); document.getElementById('timeNow').innerText = d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+            if(navigator.getBattery) navigator.getBattery().then(b=>{ document.getElementById('battLevel').innerText = Math.floor(b.level*100)+"%"; });
+            let conn = navigator.connection || navigator.mozConnection;
+            if(conn) document.getElementById('netType').innerText = conn.effectiveType || "4G";
+            if('storage' in navigator && navigator.storage) navigator.storage.estimate().then(e=>{ let gb = (e.usage/1e9).toFixed(1); document.getElementById('storageInfo').innerText = gb+"GB"; });
+        }
+        setInterval(updateStatus,2000);
+        updateStatus();
+        if(Notification.permission === "default") Notification.requestPermission();
+        showToast("X-DASH v3 siap | 50+ fitur aktif", 1800);
+    })();
+</script>
+</body>
+</html>
