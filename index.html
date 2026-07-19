@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🔥 DroidX Pro</title>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      background: #060a14;
+      color: #00e5ff;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px;
+    }
+    .container {
+      background: #0d1424;
+      border-radius: 36px;
+      padding: 24px 18px;
+      max-width: 420px;
+      width: 100%;
+      border: 1px solid #00e5ff30;
+      box-shadow: 0 0 80px #00e5ff08, inset 0 0 80px #00e5ff05;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      padding: 0 4px;
+    }
+    .header h1 {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      text-shadow: 0 0 30px #00e5ff60;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, #00e5ff, #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .status-badge {
+      padding: 5px 14px;
+      border-radius: 50px;
+      font-size: 11px;
+      font-weight: 700;
+      border: 1px solid;
+      transition: all 0.3s;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .status-online {
+      background: #00e5ff20;
+      border-color: #00e5ff;
+      color: #00e5ff;
+      box-shadow: 0 0 20px #00e5ff30;
+    }
+    .status-offline {
+      background: #ff004020;
+      border-color: #ff0040;
+      color: #ff0040;
+    }
+    .ip-section {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .ip-section input {
+      flex: 1;
+      padding: 14px 18px;
+      border-radius: 40px;
+      border: 1px solid #00e5ff30;
+      background: #060b18;
+      color: #fff;
+      font-size: 15px;
+      outline: none;
+      transition: 0.3s;
+      font-family: monospace;
+    }
+    .ip-section input:focus {
+      border-color: #00e5ff;
+      box-shadow: 0 0 30px #00e5ff20;
+    }
+    .ip-section button {
+      padding: 14px 22px;
+      border-radius: 40px;
+      border: none;
+      background: #00e5ff;
+      color: #060a14;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+      transition: 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+    .ip-section button:active {
+      transform: scale(0.94);
+      opacity: 0.8;
+    }
+    .ip-section button.disconnect {
+      background: #ff0040;
+      color: #fff;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .btn {
+      background: #111d33;
+      border: 1px solid #00e5ff20;
+      border-radius: 20px;
+      padding: 14px 0;
+      color: #c8d6e5;
+      font-size: 12px;
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.12s ease;
+      box-shadow: 0 3px 0 #00000060;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      line-height: 1.3;
+      user-select: none;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn .icon {
+      font-size: 24px;
+      display: block;
+      margin-bottom: 2px;
+    }
+    .btn .label {
+      font-size: 10px;
+      opacity: 0.7;
+      letter-spacing: 0.5px;
+    }
+    .btn:active {
+      transform: scale(0.92);
+      background: #00e5ff;
+      color: #060a14;
+      border-color: #00e5ff;
+      box-shadow: 0 0 40px #00e5ff60;
+    }
+    .btn:active .label {
+      opacity: 1;
+    }
+    .btn-wide {
+      grid-column: span 3;
+      padding: 14px 0;
+      background: #00e5ff10;
+      border-color: #00e5ff50;
+    }
+    .btn-wide:active {
+      background: #00e5ff;
+      color: #060a14;
+    }
+    .row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .btn-half {
+      padding: 12px 0;
+    }
+    .log-area {
+      background: #050811;
+      border-radius: 20px;
+      padding: 12px 16px;
+      margin-top: 14px;
+      border-left: 4px solid #00e5ff;
+      font-size: 13px;
+      min-height: 48px;
+      max-height: 72px;
+      overflow-y: auto;
+      color: #88ccff;
+      font-family: 'Courier New', monospace;
+      display: flex;
+      align-items: center;
+      word-break: break-all;
+      border: 1px solid #00e5ff10;
+    }
+    .log-area::-webkit-scrollbar {
+      width: 3px;
+    }
+    .log-area::-webkit-scrollbar-thumb {
+      background: #00e5ff60;
+      border-radius: 10px;
+    }
+    .footer-text {
+      text-align: center;
+      font-size: 10px;
+      opacity: 0.3;
+      margin-top: 16px;
+      letter-spacing: 1px;
+    }
+    @media (max-width: 400px) {
+      .btn { font-size: 11px; padding: 12px 0; }
+      .btn .icon { font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- HEADER -->
+  <div class="header">
+    <h1>⚡ DroidX</h1>
+    <span class="status-badge status-offline" id="connStatus">OFFLINE</span>
+  </div>
+
+  <!-- IP INPUT + CONNECT -->
+  <div class="ip-section">
+    <input type="text" id="ipInput" placeholder="IP target, ex: 192.168.1.100" value="192.168.1.100">
+    <button id="connectBtn">🔗 SAMBUNG</button>
+  </div>
+
+  <!-- GRID UTAMA -->
+  <div class="grid">
+    <div class="btn" data-cmd="flash_on"><span class="icon">💡</span><span class="label">Senter ON</span></div>
+    <div class="btn" data-cmd="flash_off"><span class="icon">🔦</span><span class="label">Senter OFF</span></div>
+    <div class="btn" data-cmd="camera"><span class="icon">📸</span><span class="label">Kamera</span></div>
+    <div class="btn" data-cmd="youtube"><span class="icon">▶️</span><span class="label">YouTube</span></div>
+    <div class="btn" data-cmd="tiktok"><span class="icon">🎵</span><span class="label">TikTok</span></div>
+    <div class="btn" data-cmd="screenshot"><span class="icon">🖼️</span><span class="label">Screenshot</span></div>
+    <div class="btn" data-cmd="volume_up"><span class="icon">🔊</span><span class="label">Vol +</span></div>
+    <div class="btn" data-cmd="volume_down"><span class="icon">🔉</span><span class="label">Vol -</span></div>
+    <div class="btn" data-cmd="mute"><span class="icon">🔇</span><span class="label">Mute</span></div>
+  </div>
+
+  <!-- ROW 2 APPS -->
+  <div class="row-2">
+    <div class="btn btn-half" data-cmd="open_whatsapp"><span class="icon">💬</span><span class="label">WhatsApp</span></div>
+    <div class="btn btn-half" data-cmd="open_instagram"><span class="icon">📷</span><span class="label">Instagram</span></div>
+  </div>
+
+  <!-- WIDE BUTTON -->
+  <div class="btn btn-wide" data-cmd="vibrate"><span class="icon">📳</span><span class="label">Getar 5 Detik</span></div>
+
+  <!-- LOG -->
+  <div class="log-area" id="logArea">⚡ Siap kendali...</div>
+  <div class="footer-text">◆ DARKDROID v3.0 ◆</div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  let socket = null;
+  let isConnected = false;
+  let reconnectTimer = null;
+
+  const logArea = document.getElementById('logArea');
+  const connStatus = document.getElementById('connStatus');
+  const ipInput = document.getElementById('ipInput');
+  const connectBtn = document.getElementById('connectBtn');
+
+  function updateStatus(connected, msg = '') {
+    isConnected = connected;
+    connStatus.textContent = connected ? 'ONLINE' : 'OFFLINE';
+    connStatus.className = 'status-badge ' + (connected ? 'status-online' : 'status-offline');
+    connectBtn.textContent = connected ? '⛔ PUTUS' : '🔗 SAMBUNG';
+    connectBtn.className = connected ? 'disconnect' : '';
+    if (msg) log(msg);
+  }
+
+  function log(msg) {
+    logArea.textContent = '> ' + msg;
+    logArea.scrollTop = logArea.scrollHeight;
+  }
+
+  function sendCommand(cmd) {
+    if (!isConnected || !socket) {
+      log('❌ Belum konek!');
+      return;
+    }
+    socket.emit('command', cmd);
+    log('📤 ' + cmd);
+  }
+
+  function connectSocket() {
+    // Jika sudah konek, putuskan
+    if (socket && isConnected) {
+      socket.disconnect();
+      socket = null;
+      updateStatus(false, '⛔ Koneksi diputus');
+      if (reconnectTimer) {
+        clearTimeout(reconnectTimer);
+        reconnectTimer = null;
+      }
+      return;
+    }
+
+    let ip = ipInput.value.trim();
+    if (!ip) {
+      log('❌ Isi IP dulu!');
+      return;
+    }
+    // Validasi IP sederhana
+    if (!ip.match(/^(\d{1,3}\.){3}\d{1,3}$/)) {
+      log('❌ Format IP salah!');
+      return;
+    }
+
+    const url = 'http://' + ip + ':3000';
+    log('⏳ Nyambung ke ' + url + '...');
+
+    try {
+      socket = io(url, {
+        transports: ['websocket', 'polling'],
+        timeout: 6000,
+        reconnection: false,
+        forceNew: true
+      });
+
+      socket.on('connect', () => {
+        updateStatus(true, '✅ Terkoneksi!');
+        if (reconnectTimer) {
+          clearTimeout(reconnectTimer);
+          reconnectTimer = null;
+        }
+      });
+
+      socket.on('connect_error', (err) => {
+        log('❌ Gagal: ' + (err.message || 'timeout'));
+        updateStatus(false);
+        socket.disconnect();
+        socket = null;
+        // Auto reconnect setelah 5 detik
+        if (!reconnectTimer) {
+          reconnectTimer = setTimeout(() => {
+            log('🔄 Mencoba ulang...');
+            reconnectTimer = null;
+            connectSocket();
+          }, 5000);
+        }
+      });
+
+      socket.on('disconnect', (reason) => {
+        log('⛔ Koneksi putus: ' + reason);
+        updateStatus(false);
+        socket = null;
+        if (reason === 'io client disconnect') return;
+        // Auto reconnect
+        if (!reconnectTimer) {
+          reconnectTimer = setTimeout(() => {
+            log('🔄 Mencoba ulang...');
+            reconnectTimer = null;
+            connectSocket();
+          }, 3000);
+        }
+      });
+
+      socket.on('status', (msg) => {
+        log('📩 ' + msg);
+      });
+
+    } catch (e) {
+      log('❌ Error: ' + e.message);
+      updateStatus(false);
+      socket = null;
+    }
+  }
+
+  // Event listeners
+  connectBtn.addEventListener('click', connectSocket);
+
+  // Semua tombol dengan data-cmd
+  document.querySelectorAll('.btn[data-cmd]').forEach(el => {
+    el.addEventListener('click', function(e) {
+      const cmd = this.dataset.cmd;
+      if (cmd) sendCommand(cmd);
+    });
+  });
+
+  // Enter di input IP
+  ipInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') connectSocket();
+  });
+
+  // Log awal
+  log('🔥 DroidX siap');
+})();
+</script>
+</body>
+</html>
