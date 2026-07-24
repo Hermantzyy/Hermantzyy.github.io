@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HP Control Center</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #0a0a0a;
+            color: #00ff41;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            padding: 16px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: #111;
+            border: 2px solid #00ff41;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 0 50px rgba(0, 255, 65, 0.08);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 24px;
+            letter-spacing: 2px;
+        }
+        .header .sub {
+            color: #666;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #0a0a0a;
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 1px solid #1a1a1a;
+            margin-bottom: 20px;
+            font-size: 13px;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .status-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .online {
+            background: #00ff41;
+        }
+        .offline {
+            background: #ff0044;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .btn {
+            padding: 14px 10px;
+            border: none;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            text-align: center;
+        }
+        .btn:hover {
+            transform: scale(1.03);
+        }
+        .btn:active {
+            transform: scale(0.95);
+        }
+        .btn-green {
+            background: #00ff41;
+            color: #000;
+        }
+        .btn-green:hover {
+            background: #00cc33;
+        }
+        .btn-red {
+            background: #ff0044;
+            color: #fff;
+        }
+        .btn-red:hover {
+            background: #cc0033;
+        }
+        .btn-yellow {
+            background: #ffaa00;
+            color: #000;
+        }
+        .btn-yellow:hover {
+            background: #dd8800;
+        }
+        .btn-blue {
+            background: #0066ff;
+            color: #fff;
+        }
+        .btn-blue:hover {
+            background: #0055cc;
+        }
+        .btn-purple {
+            background: #8800ff;
+            color: #fff;
+        }
+        .btn-purple:hover {
+            background: #7700cc;
+        }
+        .btn-cyan {
+            background: #00cccc;
+            color: #000;
+        }
+        .btn-cyan:hover {
+            background: #00aaaa;
+        }
+        .btn-pink {
+            background: #ff0088;
+            color: #fff;
+        }
+        .btn-pink:hover {
+            background: #cc0066;
+        }
+        .btn-orange {
+            background: #ff6600;
+            color: #fff;
+        }
+        .btn-orange:hover {
+            background: #cc5500;
+        }
+        .btn-full {
+            grid-column: 1 / -1;
+        }
+        .section-label {
+            color: #666;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 15px 0 8px 0;
+            border-bottom: 1px solid #1a1a1a;
+            padding-bottom: 6px;
+        }
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin: 8px 0;
+        }
+        .app-btn {
+            padding: 10px 4px;
+            border: 1px solid #1a1a1a;
+            border-radius: 10px;
+            background: #0a0a0a;
+            color: #00ff41;
+            cursor: pointer;
+            font-size: 11px;
+            text-align: center;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+        .app-btn:hover {
+            border-color: #00ff41;
+            background: #1a1a1a;
+        }
+        .app-btn .icon {
+            font-size: 22px;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .info-box {
+            background: #0a0a0a;
+            border-radius: 12px;
+            padding: 12px;
+            border: 1px solid #1a1a1a;
+            margin: 10px 0;
+            text-align: center;
+        }
+        .info-box .label {
+            color: #666;
+            font-size: 11px;
+        }
+        .info-box .value {
+            color: #00ff41;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .log-box {
+            background: #0a0a0a;
+            border-radius: 12px;
+            padding: 10px;
+            max-height: 160px;
+            overflow-y: auto;
+            font-size: 12px;
+            border: 1px solid #1a1a1a;
+            margin-top: 15px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+        }
+        .log-box .time {
+            color: #444;
+        }
+        .log-box .cmd {
+            color: #ffaa00;
+        }
+        .log-box .res {
+            color: #00ff41;
+        }
+        .log-box .err {
+            color: #ff0044;
+        }
+        .log-box .info {
+            color: #00cccc;
+        }
+        .flex-row {
+            display: flex;
+            gap: 10px;
+        }
+        .flex-row .btn {
+            flex: 1;
+        }
+        .input-group {
+            display: flex;
+            gap: 8px;
+            margin: 10px 0;
+        }
+        .input-group input {
+            flex: 1;
+            background: #0a0a0a;
+            color: #00ff41;
+            border: 1px solid #1a1a1a;
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+        .input-group input:focus {
+            outline: none;
+            border-color: #00ff41;
+        }
+        .input-group .btn {
+            padding: 10px 18px;
+        }
+        .ip-input {
+            display: flex;
+            gap: 8px;
+            margin: 10px 0;
+        }
+        .ip-input input {
+            flex: 1;
+            background: #0a0a0a;
+            color: #00ff41;
+            border: 1px solid #1a1a1a;
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+        .ip-input input:focus {
+            outline: none;
+            border-color: #00ff41;
+        }
+        @media (max-width: 420px) {
+            .app-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="app">
+        <!-- HEADER -->
+        <div class="header">
+            <h1>📱 HP Control</h1>
+            <div class="sub">Kontrol HP Pribadi via IP Jaringan</div>
+        </div>
+
+        <!-- IP SETTINGS -->
+        <div class="ip-input">
+            <input type="text" id="ipInput" placeholder="Masukkan IP HP (contoh: 192.168.18.16)" />
+            <button class="btn btn-green" onclick="setIP()">▶ Connect</button>
+        </div>
+
+        <!-- STATUS -->
+        <div class="status-bar">
+            <span>
+                <span class="status-dot offline" id="statusDot"></span>
+                <span id="statusText">Disconnected</span>
+            </span>
+            <span id="ipDisplay">IP: -</span>
+            <span id="deviceName">📱 -</span>
+        </div>
+
+        <!-- TORCH + CAMERA + LOCATION -->
+        <div class="section-label">🔦 Kontrol Dasar</div>
+        <div class="grid-2">
+            <button class="btn btn-green" onclick="sendCmd('senter on')">💡 Senter ON</button>
+            <button class="btn btn-red" onclick="sendCmd('senter off')">💡 Senter OFF</button>
+            <button class="btn btn-yellow" onclick="sendCmd('kamera')">📷 Kamera</button>
+            <button class="btn btn-blue" onclick="sendCmd('lokasi')">📍 Lokasi</button>
+            <button class="btn btn-purple btn-full" onclick="sendCmd('screenshot')">🖼️ Screenshot</button>
+        </div>
+
+        <!-- LOCATION DISPLAY -->
+        <div class="info-box" id="locBox">
+            <div class="label">📍 Lokasi Terkini</div>
+            <div class="value" id="locText">Belum tersedia</div>
+        </div>
+
+        <!-- APPS -->
+        <div class="section-label">📱 Buka Aplikasi</div>
+        <div class="app-grid">
+            <button class="app-btn" onclick="openApp('com.whatsapp')">
+                <span class="icon">💬</span> WA
+            </button>
+            <button class="app-btn" onclick="openApp('com.instagram.android')">
+                <span class="icon">📸</span> IG
+            </button>
+            <button class="app-btn" onclick="openApp('com.facebook.katana')">
+                <span class="icon">📘</span> FB
+            </button>
+            <button class="app-btn" onclick="openApp('com.google.android.youtube')">
+                <span class="icon">▶️</span> YT
+            </button>
+            <button class="app-btn" onclick="openApp('com.zhiliaoapp.musically')">
+                <span class="icon">🎵</span> TT
+            </button>
+            <button class="app-btn" onclick="openApp('com.spotify.music')">
+                <span class="icon">🎧</span> Spotify
+            </button>
+            <button class="app-btn" onclick="openApp('com.android.chrome')">
+                <span class="icon">🌐</span> Chrome
+            </button>
+            <button class="app-btn" onclick="openApp('com.google.android.apps.maps')">
+                <span class="icon">🗺️</span> Maps
+            </button>
+        </div>
+
+        <!-- VOLUME + BRIGHTNESS -->
+        <div class="section-label">🎛️ Kontrol Sistem</div>
+        <div class="grid-2">
+            <button class="btn btn-cyan" onclick="setVolume('15')">🔊 Vol +</button>
+            <button class="btn btn-red" onclick="setVolume('0')">🔇 Mute</button>
+            <button class="btn btn-yellow btn-full" onclick="sendCmd('brightness high')">☀️ Brightness High</button>
+            <button class="btn btn-purple btn-full" onclick="sendCmd('brightness low')">🌙 Brightness Low</button>
+        </div>
+
+        <!-- CUSTOM COMMAND -->
+        <div class="section-label">⌨️ Command Custom</div>
+        <div class="input-group">
+            <input type="text" id="customCmd" placeholder="Ketik perintah..." />
+            <button class="btn btn-green" onclick="sendCustomCmd()">▶ EXEC</button>
+        </div>
+
+        <!-- LOG -->
+        <div class="section-label">📜 Log Activity</div>
+        <div class="log-box" id="logBox">[+] HP Control siap...\n[+] Masukkan IP HP untuk koneksi</div>
+    </div>
+
+    <script>
+        // ============================================================
+        // STATE
+        // ============================================================
+        let currentIP = '';
+        let isConnected = false;
+        let socket = null;
+        let reconnectTimer = null;
+
+        // ============================================================
+        // SET IP & CONNECT
+        // ============================================================
+        function setIP() {
+            const ip = document.getElementById('ipInput').value.trim();
+            if (!ip) {
+                log('⚠️ Masukkan IP terlebih dahulu!', 'err');
+                return;
+            }
+            currentIP = ip;
+            document.getElementById('ipDisplay').textContent = `IP: ${ip}`;
+            log(`🔗 Mencoba koneksi ke ${ip}...`, 'info');
+            connectWS(ip);
+        }
+
+        // ============================================================
+        // WEBSOCKET (REALTIME) + FALLBACK HTTP
+        // ============================================================
+        function connectWS(ip) {
+            // Coba konek via HTTP dulu buat test
+            fetch(`http://${ip}:3000/ping`)
+                .then(res => {
+                    if (res.ok) {
+                        log('✅ Server terdeteksi!', 'res');
+                        connectWebSocket(ip);
+                    } else {
+                        log('⚠️ Server tidak merespon. Cek IP dan port.', 'err');
+                    }
+                })
+                .catch(() => {
+                    log('❌ Gagal konek ke server. Cek IP dan pastikan server jalan.', 'err');
+                });
+        }
+
+        function connectWebSocket(ip) {
+            try {
+                // Load socket.io
+                const script = document.createElement('script');
+                script.src = `http://${ip}:3000/socket.io/socket.io.js`;
+                document.head.appendChild(script);
+
+                setTimeout(() => {
+                    try {
+                        socket = io(`http://${ip}:3000`, {
+                            timeout: 5000,
+                            reconnection: true,
+                            reconnectionAttempts: 10,
+                            reconnectionDelay: 2000
+                        });
+
+                        socket.on('connect', () => {
+                            isConnected = true;
+                            document.getElementById('statusDot').className = 'status-dot online';
+                            document.getElementById('statusText').textContent = 'Online';
+                            socket.emit('register', 'Admin');
+                            log('✅ Terhubung ke server via WebSocket', 'res');
+                            document.getElementById('deviceName').textContent = `📱 Connected`;
+                        });
+
+                        socket.on('disconnect', () => {
+                            isConnected = false;
+                            document.getElementById('statusDot').className = 'status-dot offline';
+                            document.getElementById('statusText').textContent = 'Disconnected';
+                            log('❌ Koneksi putus', 'err');
+                        });
+
+                        socket.on('log', (msg) => {
+                            log(`📥 ${msg}`, 'info');
+                        });
+
+                        socket.on('location', (data) => {
+                            document.getElementById('locText').textContent = `${data.lat}, ${data.lng}`;
+                            log(`📍 ${data.lat}, ${data.lng}`, 'res');
+                        });
+
+                        socket.on('clients', (list) => {
+                            if (list.length > 0) {
+                                document.getElementById('deviceName').textContent = `📱 ${list.length} device`;
+                            }
+                        });
+
+                        socket.on('connect_error', (err) => {
+                            log(`⚠️ Connection error: ${err.message}`, 'err');
+                        });
+
+                    } catch (e) {
+                        log(`⚠️ Gagal konek WS: ${e.message}`, 'err');
+                    }
+                }, 2000);
+
+            } catch (e) {
+                log(`⚠️ Error: ${e.message}`, 'err');
+            }
+        }
+
+        // ============================================================
+        // FUNGSI API (HTTP FALLBACK)
+        // ============================================================
+        async function apiCall(endpoint) {
+            if (!currentIP) {
+                log('⚠️ Set IP dulu!', 'err');
+                return null;
+            }
+            try {
+                const res = await fetch(`http://${currentIP}:3000${endpoint}`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                });
+                const data = await res.json();
+                if (data.status === 'ok') {
+                    log(`✅ ${endpoint} berhasil`, 'res');
+                } else {
+                    log(`❌ ${endpoint} gagal`, 'err');
+                }
+                return data;
+            } catch (e) {
+                log(`❌ Error: ${e.message}`, 'err');
+                return null;
+            }
+        }
+
+        function sendCmd(cmd) {
+            if (!currentIP) {
+                log('⚠️ Set IP dulu!', 'err');
+                return;
+            }
+            log(`▶ ${cmd}`, 'cmd');
+
+            // Kirim via WebSocket kalo ada
+            if (socket && isConnected) {
+                socket.emit('command', { cmd });
+                return;
+            }
+
+            // Fallback via HTTP
+            apiCall(`/cmd/${cmd}`);
+        }
+
+        function openApp(pkg) {
+            if (!currentIP) {
+                log('⚠️ Set IP dulu!', 'err');
+                return;
+            }
+            log(`📱 Buka: ${pkg}`, 'cmd');
+            if (socket && isConnected) {
+                socket.emit('command', { cmd: `app ${pkg}` });
+                return;
+            }
+            apiCall(`/app/${pkg}`);
+        }
+
+        function setVolume(level) {
+            if (!currentIP) {
+                log('⚠️ Set IP dulu!', 'err');
+                return;
+            }
+            log(`🔊 Volume: ${level}`, 'cmd');
+            if (socket && isConnected) {
+                socket.emit('command', { cmd: `volume ${level}` });
+                return;
+            }
+            apiCall(`/volume/${level}`);
+        }
+
+        function sendCustomCmd() {
+            const cmd = document.getElementById('customCmd').value.trim();
+            if (cmd) {
+                sendCmd(cmd);
+                document.getElementById('customCmd').value = '';
+            }
+        }
+
+        // ============================================================
+        // LOG
+        // ============================================================
+        function log(msg, type = 'info') {
+            const box = document.getElementById('logBox');
+            const time = new Date().toLocaleTimeString();
+            const colors = {
+                cmd: '#ffaa00',
+                res: '#00ff41',
+                err: '#ff0044',
+                info: '#00cccc'
+            };
+            const color = colors[type] || '#00ff41';
+            const prefix = type === 'cmd' ? '▶' : type === 'err' ? '✖' : type === 'res' ? '✓' : '●';
+            box.innerHTML += `<div><span class="time">[${time}]</span> <span style="color:${color};">${prefix} ${msg}</span></div>`;
+            box.scrollTop = box.scrollHeight;
+        }
+
+        // ============================================================
+        // KEYBOARD SHORTCUT
+        // ============================================================
+        document.getElementById('customCmd').addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') sendCustomCmd();
+        });
+
+        document.getElementById('ipInput').addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') setIP();
+        });
+
+        // ============================================================
+        // INIT
+        // ============================================================
+        log('🚀 HP Control siap', 'info');
+        log('📌 Masukkan IP HP di atas lalu klik Connect', 'info');
+
+        // Auto reconnect
+        setInterval(() => {
+            if (currentIP && !isConnected) {
+                log('🔄 Mencoba reconnect...', 'info');
+                connectWS(currentIP);
+            }
+        }, 15000);
+    </script>
+</body>
+</html>
