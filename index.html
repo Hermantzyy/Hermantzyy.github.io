@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Senter HP</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            font-family: Arial;
+        }
+        .btn {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border: 3px solid #333;
+            background: #111;
+            font-size: 55px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn.on {
+            background: #ff0;
+            border-color: #fa0;
+            box-shadow: 0 0 80px #ff0, 0 0 150px #fa0;
+        }
+        .status {
+            color: #555;
+            margin-top: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 3px;
+        }
+        .status.on { color: #ff0; }
+        .error {
+            color: #f00;
+            margin-top: 15px;
+            font-size: 11px;
+            text-align: center;
+            max-width: 250px;
+        }
+    </style>
+</head>
+<body>
+    <button class="btn" id="btn" onclick="toggle()">🔦</button>
+    <div class="status" id="status">OFF</div>
+    <div class="error" id="error"></div>
+
+    <script>
+        let stream = null;
+        let on = false;
+
+        async function toggle() {
+            const btn = document.getElementById('btn');
+            const status = document.getElementById('status');
+            const error = document.getElementById('error');
+
+            if (on) {
+                // Matiin
+                if (stream) {
+                    stream.getVideoTracks().forEach(t => t.stop());
+                    stream = null;
+                }
+                btn.classList.remove('on');
+                status.classList.remove('on');
+                status.textContent = 'OFF';
+                on = false;
+                error.textContent = '';
+                return;
+            }
+
+            // Nyalain
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: 'environment',
+                        torch: true,
+                        width: { ideal: 320 },
+                        height: { ideal: 240 }
+                    }
+                });
+                
+                const track = stream.getVideoTracks()[0];
+                await track.applyConstraints({
+                    advanced: [{ torch: true }]
+                });
+
+                btn.classList.add('on');
+                status.classList.add('on');
+                status.textContent = 'ON';
+                on = true;
+                error.textContent = '';
+
+                // Vibrate feedback
+                if (navigator.vibrate) navigator.vibrate(20);
+
+            } catch (err) {
+                error.textContent = '❌ Gagal: ' + err.message + '\n\nBuka via HTTPS atau coba browser lain.';
+            }
+        }
+
+        // Spacebar toggle
+        document.addEventListener('keydown', e => {
+            if (e.code === 'Space') { e.preventDefault(); toggle(); }
+        });
+    </script>
+</body>
+</html>
