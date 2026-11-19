@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Helloo Cantikkkuu</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <style>
+        :root {
+            --bg-overlay: rgba(255, 238, 245, 0.85); 
+            --primary-pink: #ff7ba9; 
+            --dark-pink: #d63c6b;
+            --text-dark: #5a3d4d;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Quicksand', sans-serif;
+            scroll-behavior: smooth; 
+        }
+
+        /* --- LOADING SCREEN --- */
+        #preloader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #ffeef5; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 9999;
+            transition: opacity 0.8s ease, visibility 0.8s;
+        }
+        #preloader.hide { opacity: 0; visibility: hidden; }
+        .loader-heart {
+            font-size: 4rem; color: var(--dark-pink);
+            animation: heartbeat 1s infinite alternate;
+            filter: drop-shadow(0 0 15px rgba(214, 60, 107, 0.4));
+        }
+        .loader-text {
+            margin-top: 20px; font-size: 1.2rem; font-weight: 700;
+            color: var(--dark-pink); letter-spacing: 2px; animation: pulse-text 1.5s infinite;
+        }
+        .dots::after { content: ''; animation: dots 1.5s steps(4, end) infinite; }
+        @keyframes heartbeat { 0% { transform: scale(0.9); } 100% { transform: scale(1.2); } }
+        @keyframes pulse-text { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+        @keyframes dots { 0%, 20% { content: ''; } 40% { content: '.'; } 60% { content: '..'; } 80%, 100% { content: '...'; } }
+
+        /* --- BODY & BACKGROUND --- */
+        body {
+            color: var(--text-dark); overflow-x: hidden; position: relative;
+            background-color: #ffeef5;
+            background-image: url('https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=1920&auto=format&fit=crop');
+            background-size: cover; background-position: center;
+            background-attachment: fixed; background-repeat: no-repeat;
+        }
+        body::before {
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--bg-overlay); z-index: -2;
+        }
+
+        /* --- HUJAN HATI (BACKGROUND) --- */
+        #hearts-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -1; overflow: hidden;
+        }
+        .heart {
+            position: absolute; bottom: -30px; font-size: 1.5rem; opacity: 0.8;
+            animation: floatUp linear forwards; user-select: none;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0) translateX(0) rotate(0deg) scale(1); opacity: 0; }
+            10% { opacity: 1; }
+            50% { transform: translateY(-50vh) translateX(20px) rotate(180deg) scale(1.2); }
+            100% { transform: translateY(-110vh) translateX(-20px) rotate(360deg) scale(1.5); opacity: 0; }
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 100vh; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center;
+            padding: 20px; position: relative;
+        }
+        .hero h1 {
+            font-family: 'Great Vibes', cursive; font-size: clamp(3.5rem, 9vw, 6.5rem);
+            color: var(--dark-pink); margin-bottom: 20px;
+            text-shadow: 2px 2px 15px rgba(255, 255, 255, 0.8);
+            animation: fadeInDown 1.5s ease;
+        }
+        .hero .love-words {
+            font-size: 1.2rem; font-weight: 700; color: var(--dark-pink);
+            line-height: 1.8; max-width: 550px; margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.75); padding: 25px;
+            border-radius: 25px; backdrop-filter: blur(12px);
+            box-shadow: 0 15px 30px rgba(214, 60, 107, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            animation: fadeInUp 1.5s ease 0.3s both;
+        }
+        .hero .love-words span {
+            display: block;
+            margin-top: 10px;
+            font-size: 1.05rem;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- ANIMASI LOVE BESAR --- */
+        .big-love-section {
+            min-height: 40vh; display: flex;
+            justify-content: center; align-items: center;
+            position: relative; overflow: hidden;
+        }
+        .big-heart {
+            position: absolute; font-size: 8rem;
+            color: rgba(214, 60, 107, 0.15);
+            animation: floatBig 6s infinite ease-in-out alternate;
+        }
+        .big-heart.h1 { top: 10%; left: 15%; animation-delay: 0s; font-size: 10rem; }
+        .big-heart.h2 { bottom: 10%; right: 15%; animation-delay: 2s; font-size: 7rem; color: rgba(255, 123, 169, 0.2); }
+        .big-heart.h3 { top: 30%; left: 55%; animation-delay: 4s; font-size: 12rem; color: rgba(214, 60, 107, 0.08); }
+        @keyframes floatBig {
+            0% { transform: translateY(0) scale(1) rotate(-5deg); }
+            100% { transform: translateY(-30px) scale(1.1) rotate(5deg); }
+        }
+
+        /* --- GALERI SECTION --- */
+        .gallery-section {
+            padding: 60px 5% 80px 5%; max-width: 1200px; margin: 0 auto;
+            position: relative; z-index: 1;
+        }
+        .section-title { text-align: center; margin-bottom: 50px; }
+        .section-title h2 {
+            font-family: 'Great Vibes', cursive; font-size: 3.5rem;
+            color: var(--dark-pink); text-shadow: 2px 2px 10px rgba(255, 255, 255, 0.8);
+        }
+        .section-title p {
+            font-weight: 700; color: var(--text-dark);
+            background: rgba(255, 255, 255, 0.6); display: inline-block;
+            padding: 5px 15px; border-radius: 15px; margin-top: 10px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px; justify-content: center;
+        }
+
+        .polaroid {
+            background: var(--white); padding: 12px 12px 45px 12px;
+            box-shadow: 0 10px 25px rgba(214, 60, 107, 0.25);
+            border-radius: 8px; position: relative; transition: 0.4s ease;
+            cursor: pointer; opacity: 0; transform: translateY(30px);
+        }
+        .polaroid.show { opacity: 1; transform: translateY(0); }
+        .polaroid:nth-child(odd) { transform: rotate(-2deg); }
+        .polaroid:nth-child(even) { transform: rotate(2deg); }
+        .polaroid:nth-child(3n) { transform: rotate(-1deg); }
+
+        .polaroid:hover {
+            transform: scale(1.08) rotate(0deg);
+            box-shadow: 0 15px 35px rgba(214, 60, 107, 0.5);
+            z-index: 10;
+        }
+        .polaroid img {
+            width: 100%; height: 220px; object-fit: cover; border-radius: 4px; border: 1px solid #eee;
+        }
+        .polaroid .caption {
+            position: absolute; bottom: 12px; left: 0; width: 100%;
+            text-align: center; font-family: 'Great Vibes', cursive;
+            font-size: 1.4rem; color: var(--text-dark);
+        }
+        .polaroid::before {
+            content: ''; position: absolute; top: -8px; left: 50%;
+            transform: translateX(-50%); width: 60px; height: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transform: translateX(-50%) rotate(-2deg);
+        }
+
+        /* --- SURAT CINTA SECTION --- */
+        .love-letter {
+            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 123, 169, 0.5); border-radius: 20px;
+            max-width: 800px; margin: 20px auto 50px; padding: 50px 30px;
+            text-align: center; position: relative; z-index: 1;
+            box-shadow: 0 10px 30px rgba(214, 60, 107, 0.2);
+        }
+        .love-letter i { font-size: 3rem; color: var(--dark-pink); margin-bottom: 20px; }
+        .love-letter h2 { font-family: 'Great Vibes', cursive; font-size: 3rem; color: var(--dark-pink); margin-bottom: 20px; }
+        .love-letter p { font-size: 1.1rem; line-height: 1.8; color: var(--text-dark); font-weight: 600; }
+
+        /* --- FOOTER --- */
+        .footer {
+            text-align: center; padding: 30px 20px;
+            background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 123, 169, 0.3);
+            position: relative; z-index: 1; margin-top: 20px;
+        }
+        .footer p { font-size: 0.95rem; font-weight: 600; color: var(--text-dark); letter-spacing: 1px; }
+        
+        /* --- UPDATE FONT PEMBUAT JADI LATIN KECIL --- */
+        .footer .creator-name {
+            font-family: 'Quicksand', sans-serif; 
+            font-size: 1.2rem; 
+            font-weight: 700;
+            color: var(--dark-pink); 
+            display: block; 
+            margin-top: 8px;
+            letter-spacing: 1px; 
+            text-transform: lowercase; /* INI YANG BIKIN JADI HURUF KECIL */
+        }
+
+        @media (max-width: 768px) {
+            .polaroid img { height: 180px; }
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 0 10px; }
+            .love-letter { padding: 40px 20px; margin: 20px 15px 40px; }
+            .hero .love-words { font-size: 1.1rem; padding: 20px; }
+            .polaroid .caption { font-size: 1.1rem; }
+            .big-heart.h1 { font-size: 7rem; }
+            .big-heart.h2 { font-size: 5rem; }
+            .big-heart.h3 { font-size: 8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LOADING SCREEN (PRELOADER) -->
+    <div id="preloader">
+        <i class="fas fa-heart loader-heart"></i>
+        <div class="loader-text">Loading Duluu yaaaa<span class="dots"></span></div>
+    </div>
+
+    <!-- CONTAINER HUJAN HATI -->
+    <div id="hearts-container"></div>
+
+    <!-- HERO SECTION -->
+    <header class="hero">
+        <h1>Helloo Cantikkkuu</h1>
+        <div class="love-words">
+            "Yang Paling Cantikkk Paling Imuuppppp 🥰😍"
+            <span>Iniiii Website Yang Aku Buat Untuk Kamuu Yang Paling Cantiikkk Dan Imuppppppppp 😭😭🩷🩷🩷</span>
+        </div>
+    </header>
+
+    <!-- SECTION LOVE BESAR -->
+    <section class="big-love-section">
+        <i class="fas fa-heart big-heart h1"></i>
+        <i class="fas fa-heart big-heart h2"></i>
+        <i class="fas fa-heart big-heart h3"></i>
+    </section>
+
+    <!-- GALERI SECTION -->
+    <section class="gallery-section">
+        <div class="section-title">
+            <h2>Foto - Foto imuuupp</h2>
+            <p>Koleksi Foto Palingg Imuuppppp😭😭🐷</p>
+        </div>
+
+        <div class="gallery-grid">
+            <!-- FOTO 1 -->
+            <div class="polaroid">
+                <img src="https://cdn.phototourl.com/anon/2026-11-19-42812adb-c0b3-49de-bb4f-53f01c45163f.jpg" alt="Pacar 1">
+                <div class="caption">Imupppp nya itu looo 🩷</div>
+            </div>
+            <!-- FOTO 2 -->
+            <div class="polaroid">
+                <img src="https://cdn.phototourl.com/anon/2026-11-19-741b6542-2bc9-43ed-8d9b-b7d4c80ee37b.jpg" alt="Pacar 2">
+                <div class="caption">yang ini cantikkkk🥰</div>
+            </div>
+            <!-- FOTO 3 -->
+            <div class="polaroid">
+                <img src="https://cdn.phototourl.com/anon/2026-11-19-a2d4246e-d913-44bd-99fe-dda5b6bb72b9.jpg" alt="Pacar 3">
+                <div class="caption">Yang Palingg Imuppppp 😭</div>
+            </div>
+            <!-- FOTO 4 -->
+            <div class="polaroid">
+                <img src="https://cdn.phototourl.com/anon/2026-11-19-06c3ebd3-34a2-4f63-aff0-d4bd62ef8231.png" alt="Pacar 4">
+                <div class="caption">Cantikkk polllll 🐷</div>
+            </div>
+            <!-- FOTO 5 -->
+            <div class="polaroid">
+                <img src="https://cdn.phototourl.com/anon/2026-11-19-25d536f0-ef0d-4ed2-b477-11cb04f5d6c7.jpg" alt="Pacar 5">
+                <div class="caption">Apalagi Iniii🩷</div>
+            </div>
+            <!-- FOTO 6 -->
+            <div class="polaroid">
+                <img src="https://cdn.phototourl.com/anon/2026-11-19-c8399416-883b-4636-a664-93d976286993.jpg" alt="Pacar 6">
+                <div class="caption">Double Imupppp🥰</div>
+            </div>
+            <!-- FOTO 7 -->
+            <div class="polaroid">
+                <img src="https://cdn.phototourl.com/anon/2026-11-19-3e753d5c-57e4-4444-9db0-ab7ba4265007.jpg" alt="Pacar 7">
+                <div class="caption">Iniii Palingggg Imupppp 😭</div>
+            </div>
+            <!-- FOTO 8 -->
+            <div class="polaroid">
+                <img src="https://cdn.phototourl.com/anon/2026-11-19-92780663-eb48-4ba0-8de0-2c63c0e46420.jpg" alt="Pacar 8">
+                <div class="caption">Cantikk Nyaaa Selangit 😤</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SURAT CINTA SECTION -->
+    <section class="love-letter">
+        <i class="fas fa-envelope-open-text"></i>
+        <h2>Untuk Kamu, Sayang</h2>
+        <p>
+            "Terima kasih sudah hadir dan menjadi bagian paling indah dalam hidupku. 
+            Website kecil ini kubuat khusus buat kamu, sebagai pengingat kalau setiap senyum, 
+            tawa, dan momen kita itu sangat berarti 🥰🥰🥰🩷🩷<br><br>
+            I love you more than words can say. ❤️"
+        </p>
+    </section>
+
+    <!-- FOOTER / CREDIT -->
+    <footer class="footer">
+        <p>Dibuat dengan penuh cinta oleh</p>
+        <!-- NAMA PEMBUAT (HURUF LATIN KECIL) -->
+        <span class="creator-name">si ganteng hrmann 😭😭</span> 
+    </footer>
+
+    <!-- SCRIPT -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. Sembunyiin Preloader setelah 2.5 detik
+            setTimeout(() => {
+                const preloader = document.getElementById('preloader');
+                if(preloader) {
+                    preloader.classList.add('hide');
+                }
+            }, 2500); 
+
+            // 2. Animasi Card Muncul
+            const cards = document.querySelectorAll('.polaroid');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('show');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            cards.forEach((card, index) => {
+                card.style.transitionDelay = `${index * 0.1}s`;
+                observer.observe(card);
+            });
+
+            // 3. Generator Hujan Hati (Background)
+            const heartsContainer = document.getElementById('hearts-container');
+            const heartEmojis = ['❤️', '💖', '💕', '🩷', '💘', '💝']; 
+
+            function createHeart() {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.innerText = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+                heart.style.left = Math.random() * 100 + 'vw';
+                const size = Math.random() * 20 + 10;
+                heart.style.fontSize = size + 'px';
+                const duration = Math.random() * 4 + 4;
+                heart.style.animationDuration = duration + 's';
+                heart.style.animationDelay = Math.random() * 2 + 's';
+                heartsContainer.appendChild(heart);
+
+                setTimeout(() => {
+                    heart.remove();
+                }, (duration + 2) * 1000);
+            }
+
+            setInterval(createHeart, 150);
+        });
+    </script>
+
+</body>
+</html>
